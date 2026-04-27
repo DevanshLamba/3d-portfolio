@@ -5,33 +5,34 @@ import { MdArrowBack, MdArrowForward } from "react-icons/md";
 
 const projects = [
   {
-    title: "CallHQ",
-    category: "Voice AI Calling Platform",
-    tools: "Voice AI, Calling Automation, CRM Integrations",
-    image: "/images/callhq.png",
-    link: "https://callhq.ai",
+    title: "TunePlay",
+    category: "Android Music Player",
+    tools: "Java, Android Studio, Media APIs",
+    image: "/images/react2.webp",
+    link: "https://github.com/devanshlamba",
   },
   {
-    title: "Whatsapp Automation",
-    category: "WABA Application",
-    tools: "WhatsApp Business API, Workflow Automation, Notifications",
-    image: "/images/whatsapp.png",
-    link: "https://whatsapp.callhq.ai",
+    title: "Ordo",
+    category: "Backend Systems & Workflow Automation",
+    tools: "Node.js, APIs, System Design",
+    image: "/images/node2.webp",
+    link: "#",
   },
   {
-    title: "Broki",
-    category: "Real Estate Platform for FnB Industry",
-    tools: "Property Discovery, Lead Management, Marketplace Workflows",
-    image: "/images/broki.png",
-    link: "https://broki.in",
+    title: "Car Marketplace Backend",
+    category: "System Design & API Architecture",
+    tools: "Node.js, MongoDB, REST APIs",
+    image: "/images/mongo.webp",
+    link: "#",
   },
   {
-    title: "Orrdr.com",
-    category: "Ecommerce Platform and Mobile App",
-    tools: "Ecommerce, Mobile Experience, Order Management",
-    image: "/images/orrdr.png",
-    link: "https://orrdr.com",
+    title: "Problem Solving",
+    category: "DSA & Logic Building",
+    tools: "LeetCode, Data Structures",
+    image: "/images/javascript.webp",
+    link: "https://leetcode.com/",
   },
+
 ];
 
 const Work = () => {
