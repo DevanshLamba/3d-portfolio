@@ -10,6 +10,12 @@ const Contact = () => {
         <div className="contact-flex">
           {/* Connect */}
           <div className="contact-box">
+            <h4>Phone</h4>
+              <p>
+                <a href="tel:+917692968555" data-cursor="disable">
+                  +91 7692968555
+               </a>
+              </p>
             <h4>Connect</h4>
             <p>
               <a
