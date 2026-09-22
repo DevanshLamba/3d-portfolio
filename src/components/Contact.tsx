@@ -58,6 +58,16 @@ const Contact = () => {
             </a>
 
             <a
+              href="https://x.com/devanshlamba"
+              target="_blank"
+              rel="noreferrer"
+              data-cursor="disable"
+              className="contact-social"
+            >
+              Twitter <MdArrowOutward />
+            </a>
+
+            <a
               href="https://www.youtube.com/@devanshlamba"
               target="_blank"
               rel="noreferrer"

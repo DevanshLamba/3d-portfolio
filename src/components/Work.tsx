@@ -5,34 +5,26 @@ import { MdArrowBack, MdArrowForward } from "react-icons/md";
 
 const projects = [
   {
-    title: "TunePlay",
-    category: "Android Music Player",
-    tools: "Java, Android Studio, Media APIs",
-    image: "/images/react2.webp",
-    link: "https://github.com/devanshlamba",
+    title: "Siliqo",
+    category: "Agentic Customer Support API Platform",
+    tools: "Python, PostgreSQL + pgvector, RAG, Multi-tenant SaaS",
+    image: "/images/siliqo-dashboard.png",
+    link: "https://siliqo-beta.vercel.app/",
+  },
+  {
+    title: "Vayris",
+    category: "Open-Source AI Agent for Windows",
+    tools: "Electron, React, TypeScript, Agentic Routing, MCP",
+    image: "/images/vayris-app.png",
+    link: "https://vayris-website.vercel.app/",
   },
   {
     title: "Ordo",
-    category: "Backend Systems & Workflow Automation",
-    tools: "Node.js, APIs, System Design",
-    image: "/images/node2.webp",
-    link: "#",
+    category: "Hyperlocal Quick-Commerce Platform",
+    tools: "Node.js, React Native, MongoDB, REST APIs",
+    image: "/images/ordo-logo.jpg",
+    link: "",
   },
-  {
-    title: "Car Marketplace Backend",
-    category: "System Design & API Architecture",
-    tools: "Node.js, MongoDB, REST APIs",
-    image: "/images/mongo.webp",
-    link: "#",
-  },
-  {
-    title: "Problem Solving",
-    category: "DSA & Logic Building",
-    tools: "LeetCode, Data Structures",
-    image: "/images/javascript.webp",
-    link: "https://leetcode.com/",
-  },
-
 ];
 
 const Work = () => {

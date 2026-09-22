@@ -2,6 +2,7 @@ import {
   FaGithub,
   FaInstagram,
   FaLinkedinIn,
+  FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
 import "./styles/SocialIcons.css";
@@ -75,6 +76,15 @@ const SocialIcons = () => {
             rel="noreferrer"
           >
             <FaLinkedinIn />
+          </a>
+        </span>
+        <span>
+          <a
+            href="https://x.com/devanshlamba"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <FaXTwitter />
           </a>
         </span>
         <span>

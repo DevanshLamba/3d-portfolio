@@ -18,15 +18,32 @@ const Career = () => {
           <div className="career-info-box">
             <div className="career-info-in">
               <div className="career-role">
-                <h4>Backend Systems & Automation</h4>
-                <h5>Independent Builder</h5>
+                <h4>Siliqo — Agentic Customer Support API</h4>
+                <h5>Solo Builder</h5>
               </div>
               <h3>NOW</h3>
             </div>
             <p>
-              Designing and building backend systems focused on automation,
-              workflows, and real-world problem solving. Working on scalable
-              architectures, APIs, and execution-focused systems.
+              Built a multi-tenant SaaS backend (7,400+ LOC, 38 endpoints, 68
+              passing tests) powering an embeddable AI support widget — RAG on
+              PostgreSQL + pgvector, agentic tool-calling, provider-agnostic LLM
+              abstraction across OpenAI, Anthropic, and Google.
+            </p>
+          </div>
+
+          {/* Vayris */}
+          <div className="career-info-box">
+            <div className="career-info-in">
+              <div className="career-role">
+                <h4>Vayris</h4>
+                <h5>Open-Source AI Agent, Independent Builder</h5>
+              </div>
+              <h3>Ongoing</h3>
+            </div>
+            <p>
+              Building a local-first, agentic AI assistant for Windows with a
+              tri-path routing architecture (deterministic, fast-LLM, and
+              deep-LLM reasoning) sharing a unified tool registry.
             </p>
           </div>
 
@@ -35,30 +52,14 @@ const Career = () => {
             <div className="career-info-in">
               <div className="career-role">
                 <h4>Ordo</h4>
-                <h5>Startup (Private)</h5>
+                <h5>Founder & Developer</h5>
               </div>
               <h3>2025</h3>
             </div>
             <p>
-              Working on backend-driven systems and workflow automation for
-              real-world use cases. Focus on system design, execution, and
-              building reliable infrastructure.
-            </p>
-          </div>
-
-          {/* Projects */}
-          <div className="career-info-box">
-            <div className="career-info-in">
-              <div className="career-role">
-                <h4>Projects & Systems</h4>
-                <h5>Self-driven</h5>
-              </div>
-              <h3>Ongoing</h3>
-            </div>
-            <p>
-              Built applications like TunePlay and backend systems for marketplace
-              platforms. Focused on APIs, system architecture, and practical
-              implementation.
+              Founded and lead development of a hyperlocal quick-commerce
+              platform connecting retailers, customers, and delivery partners —
+              secure REST APIs, real-time order tracking, and a React Native app.
             </p>
           </div>
 
