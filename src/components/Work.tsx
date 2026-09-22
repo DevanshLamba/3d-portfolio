@@ -23,7 +23,7 @@ const projects = [
     category: "Hyperlocal Quick-Commerce Platform",
     tools: "Node.js, React Native, MongoDB, REST APIs",
     image: "/images/ordo-logo.jpg",
-    link: "",
+    link: "https://ordo-website-two.vercel.app/",
   },
 ];
 
