@@ -329,3 +329,28 @@
     max-height: 250px;
   }
 }
+
+@media only screen and (max-width: 768px) {
+  /* Stack project cards instead of sliding — avoids the mid-transition
+     overlap that makes cards unreadable on small screens. */
+  .carousel-track {
+    flex-direction: column;
+    transform: none !important;
+  }
+
+  .carousel-slide {
+    min-width: 100%;
+    width: 100%;
+    padding: 30px 0;
+    border-bottom: 1px solid #262626;
+  }
+
+  .carousel-slide:last-child {
+    border-bottom: none;
+  }
+
+  .carousel-arrow,
+  .carousel-dots {
+    display: none;
+  }
+}
