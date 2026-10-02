@@ -3,11 +3,11 @@ import "./styles/Work.css";
 import WorkImage from "./WorkImage";
 import { MdArrowBack, MdArrowForward, MdArrowOutward } from "react-icons/md";
 
-// Read-only demo login for CloudTasks. Replace the placeholder with the real
-// password — nothing else needs to change. While it is still the placeholder
-// the credentials line is left off the card rather than published as-is.
+// Read-only demo login for CloudTasks, shown on the card on purpose. The
+// account is read-only and the password is public; set it back to the
+// placeholder to hide the credentials line again.
 const DEMO_PASSWORD_PLACEHOLDER = "DEMO_PASSWORD_HERE";
-const CLOUDTASKS_DEMO_PASSWORD = DEMO_PASSWORD_PLACEHOLDER;
+const CLOUDTASKS_DEMO_PASSWORD = "123456789012";
 
 interface Project {
   title: string;
