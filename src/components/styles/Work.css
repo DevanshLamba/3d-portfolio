@@ -46,6 +46,9 @@
 
 .carousel-slide {
   min-width: 100%;
+  /* flex-basis would otherwise resolve to max-content and, with no shrinking
+     allowed, push the slide wider than the track so the image gets clipped. */
+  width: 100%;
   flex-shrink: 0;
   box-sizing: border-box;
   padding: 50px 0;
@@ -60,6 +63,9 @@
 
 .carousel-info {
   flex: 1;
+  /* Without this the column cannot shrink below its min-content width, which
+     widens the slide past the track and clips the image. */
+  min-width: 0;
   display: flex;
   gap: 30px;
   align-items: flex-start;
@@ -208,6 +214,7 @@
 
 .carousel-image-wrapper {
   flex: 1;
+  min-width: 0;
   display: flex;
   justify-content: center;
   align-items: center;
