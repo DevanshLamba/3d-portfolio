@@ -32,10 +32,14 @@
   width: 100%;
   border-top: 1px solid #363636;
   border-bottom: 1px solid #363636;
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .carousel-track {
   display: flex;
+  /* Keep each slide at its own height so the viewport can size to the active
+     one rather than to the tallest. */
+  align-items: flex-start;
   transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   will-change: transform;
 }
@@ -105,6 +109,101 @@
   color: #adacac;
   margin: 6px 0 0;
   font-size: 15px;
+}
+
+.carousel-summary {
+  font-weight: 200;
+  color: #adacac;
+  margin: 4px 0 0;
+  font-size: 15px;
+  max-width: 60ch;
+}
+
+/* ── Long-form project details (opt-in per project) ── */
+.carousel-learned {
+  margin-top: 16px;
+}
+
+.carousel-learned ul {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 60ch;
+}
+
+.carousel-learned li {
+  position: relative;
+  padding-left: 18px;
+  font-weight: 200;
+  color: #adacac;
+  font-size: 15px;
+}
+
+.carousel-learned li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accentColor);
+  opacity: 0.7;
+}
+
+.carousel-limits {
+  margin: 16px 0 0;
+  padding-left: 12px;
+  border-left: 1px solid #363636;
+  font-weight: 200;
+  color: #8f8f8f;
+  font-size: 14px;
+  max-width: 60ch;
+}
+
+.carousel-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.carousel-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.carousel-links a:hover,
+.carousel-links a:focus-visible {
+  background: rgba(94, 234, 212, 0.15);
+  border-color: var(--accentColor);
+  color: var(--accentColor);
+}
+
+.carousel-links a:focus-visible,
+.carousel-dot:focus-visible,
+.carousel-arrow:focus-visible {
+  outline: 2px solid var(--accentColor);
+  outline-offset: 3px;
+}
+
+.carousel-demo {
+  margin: 12px 0 0;
+  font-size: 13px;
+  font-weight: 200;
+  color: #8f8f8f;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .carousel-image-wrapper {
@@ -328,11 +427,26 @@
   .work-image img {
     max-height: 250px;
   }
+
+  .carousel-summary,
+  .carousel-learned li {
+    font-size: 14px;
+  }
+
+  .carousel-links a {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
 }
 
 @media only screen and (max-width: 768px) {
   /* Stack project cards instead of sliding — avoids the mid-transition
      overlap that makes cards unreadable on small screens. */
+  .carousel-track-container {
+    height: auto !important;
+    transition: none;
+  }
+
   .carousel-track {
     flex-direction: column;
     transform: none !important;
