@@ -120,6 +120,15 @@ Live site: [https://akashrmalhotra.netlify.app/](https://akashrmalhotra.netlify.
 - `npm run preview`  
   Serves the production build locally for verification.
 
+- `npm run resume`
+  Rebuilds `public/resume.pdf` from the profile data (needs Chrome or Edge installed).
+
+- `npm run cover -- <project id>`
+  Renders a case-file cover for a project into `public/images/` (e.g. `npm run cover -- leadloop`).
+
+- `npm run build:api`
+  Bundles `server/chat.ts` into `api/chat.js` for Vercel.
+
 - `npm run og`  
   Rebuilds the link-preview card from the profile data (needs Chrome or Edge installed).
 
@@ -181,7 +190,7 @@ The UI lives in `src/components/Assistant/`: `Assistant.css` and `Lab/Lab.css` h
 
 **Privacy.** There is no phone number anywhere in the profile, and the displayed email (`contact.email`) and project demo credentials are never indexed. Email addresses and phone-like digit runs are redacted from everything the assistant can show: indexed facts, answers, pitches, tour text and tool output. Blank or placeholder links are skipped. `tests/assistant/privacy.test.ts` fails if a phone-like pattern or a telephone link shows up in any of those or in the site's rendered sources (components, profile, `index.html`, README, the preview card and public text files). API keys are pasted at runtime, held in memory only, and never stored. Don't hardcode a key anywhere in this repo; anything in frontend code is public.
 
-> **Résumé: hidden until there's a phone-free copy.** `resume` in `src/data/profile.ts` is the single value every résumé link comes from (the corner button, the assistant's contact answer, the recruiter pitch, the palette and the `get_contact` tool), and it is empty, so all of them are hidden. The existing `public/Devansh_Lamba_Resume.pdf` contains a phone number and is still served at its URL as long as it sits in `public/`. To bring the résumé back, save a phone-free PDF as `public/resume.pdf` and set `resume: "/resume.pdf"`; a test checks that the file exists and isn't the old PDF.
+> **Résumé.** `npm run resume` builds `resume/resume.html` from `src/data/profile.ts` and prints it to `public/resume.pdf` with a local Chrome or Edge, so the résumé always matches the site and never has a phone number. `resume` in `profile.ts` is the single value every résumé link comes from (the corner button, the assistant, the recruiter pitch, the palette and the `get_contact` tool); set it to `""` to hide them all. Re-run `npm run resume` after changing the profile. The old `public/Devansh_Lamba_Resume.pdf` contains a phone number and is no longer linked, but it is still served at its URL while it sits in `public/`.
 
 **Editing.** Add or change facts in `profile.ts` and the index, matcher, pitches and tour pick them up. Tour stops and per-audience pitch choices are under `profile.assistant`. The job matcher's skill vocabulary is in `src/assistant/skills/taxonomy.ts`.
 
@@ -217,9 +226,17 @@ Settings live only in environment variables, never in the repo or the browser bu
 | `RESEND_API_KEY` | API key from Resend. |
 | `CONTACT_TO_EMAIL` | Where responses are delivered. |
 | `CONTACT_FROM_EMAIL` | The sender. Resend's `onboarding@resend.dev` only delivers to your own Resend account's email; for anything else verify `devanshlamba.in` in Resend (it adds DNS records you put in Cloudflare) and use an address on it. |
-| `ALLOWED_ORIGINS` | Optional, e.g. `https://devanshlamba.in,https://www.devanshlamba.in`. |
+| `ALLOWED_ORIGINS` | Optional, e.g. `https://devanshlamba.in,https://www.devanshlamba.in`. Applies to both endpoints. |
+| `GEMINI_API_KEY` | Google AI Studio key for the assistant's live answers (below). |
+| `GEMINI_MODEL`, `GEMINI_FALLBACK_MODEL` | Optional. Default `gemini-flash-latest`, falling back to `gemini-3.1-flash-lite` when busy. |
 
 Without `RESEND_API_KEY`, `npm run dev` and `npm run preview` run the form as a dry run (logged in the terminal, nothing sent), and production answers that the form isn't set up yet. `npm test` covers the endpoint with a fake email provider.
+
+### Live answers with Gemini
+
+Retrieval always runs in the browser. For grounded answers, the assistant then asks `/api/chat` to word the answer with Gemini. The endpoint (`server/chat.ts`, bundled into `api/chat.js` by `npm run build:api`) takes only the question, runs the same retrieval itself, and gives Gemini nothing but the top portfolio facts, so questions outside the portfolio never reach the model and the endpoint can't be used as a general chatbot. Answers must cite those facts, phone numbers and emails are redacted, and requests are size-capped and rate-limited. The key lives only in `GEMINI_API_KEY` on the server. If the key is missing, Gemini is busy, or anything fails, visitors get the offline answer instead, with no error shown.
+
+After changing anything under `src/assistant/`, `src/data/profile.ts` or `server/`, run `npm run build:api` and commit `api/chat.js`; a test fails if the bundle is stale.
 
 ### Run and review locally
 
@@ -255,6 +272,9 @@ Review checklist (run it on `npm run dev` to see the FPS readout, then once more
 - [ ] **Lab**: train the neural net on spirals until accuracy passes 95%; change chunk size and overlap in the RAG playground and watch the top match move; switch attention heads; step k-means to convergence; set regression to degree 11, press "Solve exactly", and see held-out error climb. Esc closes it. Keep an eye on the FPS readout while training.
 - [ ] **Leave a response**: the navbar's RESPOND link and the Contact section's button scroll to the form and put the cursor in Name. Submitting it empty shows an error summary and marks each field; Tab, Space and Enter work throughout. With the dev server running and no key set, a valid response shows the RECEIVED stamp and a dry-run line in the terminal. Turn off the network in dev tools and submit: a RETURNED notice appears and nothing you typed is lost.
 - [ ] With your Resend settings in `.env.local`, a response arrives in your inbox and replying goes to the visitor.
+- [ ] The **RESUME** button opens `/resume.pdf`, which has no phone number.
+- [ ] With `GEMINI_API_KEY` in `.env.local`, "How this was found" under an answer names Gemini as the generator; without it, it says offline and nothing else changes.
+- [ ] *What is LeadLoop?*, *Is LeadLoop live?* and *Does LeadLoop have WhatsApp ordering?* describe it as in development, with WhatsApp ordering as planned.
 - [ ] On a phone-width window, the panel sits below the header, and the Lab and palette cover the page with no sideways scrolling.
 - [ ] After `npm run og`, `public/og-image.png` shows your current name, headline and numbers.
 - [ ] With reduced motion turned on in the OS, scrolling and tour stops land without easing.
