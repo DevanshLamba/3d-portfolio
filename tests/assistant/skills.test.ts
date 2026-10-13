@@ -94,6 +94,7 @@ describe("tour", () => {
 describe("LLM provider", () => {
   test("citations to facts that weren't provided are dropped", () => {
     assert.equal(sanitizeCitations("Built Siliqo [1] and Vayris [7].", 2), "Built Siliqo [1] and Vayris .");
+    assert.equal(sanitizeCitations("Open source [1, 4] and [2,9].", 4), "Open source [1][4] and [2].");
   });
 
   test("sends an OpenAI-compatible request and returns the answer", async () => {

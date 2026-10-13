@@ -79,6 +79,8 @@ export function buildMessages(request: GenerateRequest) {
 /** Drops [n] markers that don't point at a provided fact. */
 export function sanitizeCitations(answer: string, contextSize: number): string {
   return answer
+    // Models sometimes group citations as "[1, 4]"; split them into "[1][4]".
+    .replace(/\[(\d+(?:\s*,\s*\d+)+)\]/g, (_m, list: string) => list.split(/\s*,\s*/).map((n) => `[${n}]`).join(""))
     .replace(/\[(\d+)\]/g, (match, n: string) => {
       const k = Number(n);
       return k >= 1 && k <= contextSize ? match : "";
