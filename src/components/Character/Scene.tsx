@@ -12,6 +12,7 @@ import {
 } from "./utils/mouseUtils";
 import setAnimations from "./utils/animationUtils";
 import { setProgress } from "../Loading";
+import { ASSISTANT_STATE_EVENT, type AssistantActivity } from "../../assistant/events";
 
 const Scene = () => {
   const canvasDiv = useRef<HTMLDivElement | null>(null);
@@ -48,6 +49,7 @@ const Scene = () => {
       let mixer: THREE.AnimationMixer;
 
       const clock = new THREE.Clock();
+      let stopReacting = () => {};
 
       const light = setLighting(scene);
       let progress = setProgress((value) => setLoading(value));
@@ -57,6 +59,10 @@ const Scene = () => {
         if (gltf) {
           const animations = setAnimations(gltf);
           hoverDivRef.current && animations.hover(gltf, hoverDivRef.current);
+          const onAssistant = (e: Event) =>
+            animations.react((e as CustomEvent<{ state: AssistantActivity }>).detail.state);
+          window.addEventListener(ASSISTANT_STATE_EVENT, onAssistant);
+          stopReacting = () => window.removeEventListener(ASSISTANT_STATE_EVENT, onAssistant);
           mixer = animations.mixer;
           let character = gltf.scene;
           setChar(character);
@@ -127,6 +133,7 @@ const Scene = () => {
       };
       animate();
       return () => {
+        stopReacting();
         clearTimeout(debounce);
         scene.clear();
         renderer.dispose();
