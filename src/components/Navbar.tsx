@@ -70,6 +70,11 @@ const Navbar = () => {
               <HoverLinks text="CONTACT" />
             </a>
           </li>
+          <li>
+            <a data-href="#respond" href="#respond">
+              <HoverLinks text="RESPOND" />
+            </a>
+          </li>
         </ul>
       </div>
 

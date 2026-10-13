@@ -5,6 +5,7 @@ import { isPlaceholder, profile } from "../../data/profile";
 import CommandPalette, { type Command } from "./CommandPalette";
 import { LAB_TABS, type LabTab } from "./Lab/tabs";
 import Panel from "./Panel";
+import { openResponseForm } from "../ResponseForm/openResponseForm";
 import { navigateToSection } from "./sceneNavigation";
 import { PALETTE_SHORTCUT } from "./shortcut";
 import TourCard from "./TourCard";
@@ -70,12 +71,14 @@ const Assistant = () => {
       if (action.anchor) navigateToSection(action.anchor);
       if (action.skill === "tour") assistant.tour.start();
       if (action.skill === "match") openPanel("match");
+      if (action.skill === "respond") openResponseForm();
     },
     [assistant, openPanel]
   );
 
   const commands = useMemo<Command[]>(() => {
     const list: Command[] = [
+      { id: "respond", group: "Contact", label: "Leave a response", keywords: "contact hire email reach call phone message form", run: openResponseForm },
       { id: "open", group: "Assistant", label: "Open the assistant", keywords: "chat ask", run: () => openPanel() },
       { id: "match", group: "Assistant", label: "Match a job description", keywords: "jd hiring recruiter", run: () => openPanel("match") },
       { id: "agent", group: "Assistant", label: "Agent mode (show tool steps)", keywords: "tools plan", run: () => openPanel("agent") },

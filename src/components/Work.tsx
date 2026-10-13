@@ -143,6 +143,9 @@ const Work = () => {
                             ))}
                           </div>
                         )}
+                        {project.repo?.visibility === "private" && (
+                          <p className="carousel-private">Code is private · walkthrough on request</p>
+                        )}
                         {project.demo &&
                           project.demo.password !==
                             DEMO_PASSWORD_PLACEHOLDER && (

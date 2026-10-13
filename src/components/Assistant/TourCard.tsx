@@ -1,4 +1,5 @@
 import type { Tour, TourEventDetail } from "../../assistant";
+import { openResponseForm } from "../ResponseForm/openResponseForm";
 
 const TourCard = ({ tour, state }: { tour: Tour; state: TourEventDetail }) => {
   if (!state.stop) return null;
@@ -22,6 +23,18 @@ const TourCard = ({ tour, state }: { tour: Tour; state: TourEventDetail }) => {
         <button type="button" className="assistant-btn is-primary" onClick={() => tour.next()}>
           {index === total - 1 ? "Finish" : "Next →"}
         </button>
+        {index === total - 1 && (
+          <button
+            type="button"
+            className="assistant-btn"
+            onClick={() => {
+              tour.end();
+              openResponseForm();
+            }}
+          >
+            Leave a response
+          </button>
+        )}
         <button type="button" className="assistant-btn is-quiet" onClick={() => tour.end()}>
           End (Esc)
         </button>

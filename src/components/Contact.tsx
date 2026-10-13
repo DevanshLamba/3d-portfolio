@@ -1,8 +1,10 @@
 import { MdArrowOutward, MdCopyright } from "react-icons/md";
 import "./styles/Contact.css";
 import { profile } from "../data/profile";
+import ResponseForm from "./ResponseForm";
+import { openResponseForm, RESPONSE_FORM_ID } from "./ResponseForm/openResponseForm";
 
-const { phone, connect, focus, socials } = profile.contact;
+const { email, connect, focus, socials } = profile.contact;
 
 const Contact = () => {
   return (
@@ -10,13 +12,29 @@ const Contact = () => {
       <div className="contact-container">
         <h3>Contact</h3>
 
+        <ResponseForm />
+
         <div className="contact-flex">
           {/* Connect */}
           <div className="contact-box">
-            <h4>Phone</h4>
+            <h4>Get in touch</h4>
             <p>
-              <a href={phone.href} data-cursor="disable">
-                {phone.display}
+              <a
+                href={`#${RESPONSE_FORM_ID}`}
+                className="contact-cta"
+                data-cursor="disable"
+                onClick={(e) => {
+                  e.preventDefault();
+                  openResponseForm();
+                }}
+              >
+                Leave a response <MdArrowOutward />
+              </a>
+            </p>
+            <h4>Email</h4>
+            <p>
+              <a href={email.href} data-cursor="disable">
+                {email.display}
               </a>
             </p>
             <h4>Connect</h4>

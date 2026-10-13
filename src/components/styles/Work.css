@@ -506,3 +506,11 @@
     font-size: 28px;
   }
 }
+
+.carousel-private {
+  margin: 12px 0 0;
+  font: 500 12px var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--rust);
+}

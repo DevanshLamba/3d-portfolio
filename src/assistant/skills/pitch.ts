@@ -13,7 +13,7 @@ export interface PitchAction {
   /** Page section to navigate to. */
   anchor?: string;
   /** Another assistant skill to open. */
-  skill?: "match" | "tour";
+  skill?: "match" | "tour" | "respond";
 }
 
 export interface Pitch {
@@ -48,6 +48,8 @@ function resolveAction(p: ProfileData, action: PitchConfig["actions"][number]): 
     }
     case "contact":
       return { label: "Contact", anchor: "contact" };
+    case "respond":
+      return { label: "Leave a response", skill: "respond" };
     case "work":
       return { label: "See the work", anchor: "work" };
     case "match":

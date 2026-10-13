@@ -62,6 +62,12 @@ export interface Citation {
 /** answered: cited facts · not-found: honest "couldn't find" · chat: greeting or help. */
 export type AnswerOutcome = "answered" | "not-found" | "chat";
 
+/** A follow-up the UI can offer under an answer. */
+export interface AnswerAction {
+  kind: "respond";
+  label: string;
+}
+
 export interface AskResult {
   query: string;
   answer: string;
@@ -73,6 +79,8 @@ export interface AskResult {
   /** False when nothing relevant was found and the answer says so. */
   grounded: boolean;
   outcome: AnswerOutcome;
+  /** e.g. a "Leave a response" button under contact answers. */
+  actions: AnswerAction[];
   generator: "offline" | string;
   /** Set when a live provider failed and the offline answer was used instead. */
   fallbackReason?: string;

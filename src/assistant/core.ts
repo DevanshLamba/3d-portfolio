@@ -9,7 +9,11 @@ import { buildKnowledge } from "./knowledge.ts";
 import { TfIdfIndex } from "./retrieval.ts";
 import { createJobMatcher } from "./skills/jobMatcher.ts";
 import { runTool, toolSchemas, type ToolContext } from "./tools.ts";
-import type { AgentStep, AskResult } from "./types.ts";
+import type { AgentStep, AnswerAction, AskResult } from "./types.ts";
+
+// Questions about reaching Devansh get a button that opens the response form.
+const CONTACT_INTENT = /\b(phone|mobile|call|contact|reach|email|e-mail|whatsapp|hire|hiring|recruit|recruiting|interview|touch)\b/i;
+const RESPOND: AnswerAction = { kind: "respond", label: "Leave a response" };
 
 export interface AskOptions {
   topK?: number;
@@ -34,6 +38,15 @@ export function createAssistantCore(p: ProfileData = defaultProfile) {
     ask(query: string, options: AskOptions = {}): AskResult {
       const t0 = now();
       const result = index.search(query, { topK: options.topK ?? 5 });
+      const contactIntent = CONTACT_INTENT.test(query);
+      // For "how do I reach / hire / call him" the form is the answer, so the
+      // contact fact leads even when another fact scored higher.
+      if (contactIntent && result.hits.length && result.hits[0].id !== "contact") {
+        const contact = index.search("contact reach", { topK: 1 }).hits.find((h) => h.id === "contact");
+        if (contact) {
+          result.hits = [{ ...contact, score: result.hits[0].score }, ...result.hits.filter((h) => h.id !== "contact")].slice(0, options.topK ?? 5);
+        }
+      }
       const t1 = now();
       const composed = composeAnswer(query, result, composeCtx);
       return {
@@ -45,6 +58,10 @@ export function createAssistantCore(p: ProfileData = defaultProfile) {
         unknownTerms: result.unknownTerms,
         grounded: composed.grounded,
         outcome: composed.outcome,
+        actions:
+          composed.outcome !== "chat" && (contactIntent || composed.citations.some((c) => c.sourceId === "contact"))
+            ? [RESPOND]
+            : [],
         generator: "offline",
         timings: { retrievalMs: t1 - t0, generationMs: now() - t1 },
       };

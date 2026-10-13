@@ -1,0 +1,296 @@
+/* "Leave a response": a stamped office form on the contact desk. */
+
+.respond {
+  margin: 40px 0 70px;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.respond-file {
+  position: relative;
+  background: var(--paper-2);
+  border: 2px solid var(--ink);
+  border-radius: 8px;
+  box-shadow: 10px 10px 0 var(--paper-3), 10px 10px 0 2px var(--ink);
+  padding: 28px 30px 26px;
+  max-width: 920px;
+  margin-top: 26px;
+  box-sizing: border-box;
+}
+.respond-tab {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  transform: translateY(-100%);
+  font: 600 11px/1 var(--font-mono);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  background: var(--amber-soft);
+  border: 2px solid var(--ink);
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  padding: 7px 12px 5px;
+}
+.respond-head h4 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+}
+.respond-head p {
+  margin: 6px 0 18px;
+  color: var(--ink-soft);
+}
+
+.respond-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 26px;
+}
+.respond-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.respond-wide {
+  grid-column: 1 / -1;
+}
+.respond-field label {
+  font: 600 11px/1.4 var(--font-mono);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.respond-field label span {
+  color: var(--rust);
+}
+.respond-field input:not([type="checkbox"]),
+.respond-field textarea {
+  font: 15px/1.5 var(--font-mono);
+  color: var(--ink);
+  background: var(--paper);
+  border: none;
+  border-bottom: 2px solid var(--ink);
+  border-radius: 3px 3px 0 0;
+  padding: 8px 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.respond-field textarea {
+  resize: vertical;
+  min-height: 120px;
+  border: 1.5px solid var(--ink);
+  border-radius: 4px;
+  background-image: repeating-linear-gradient(transparent 0 23.5px, rgba(46, 42, 36, 0.07) 23.5px 24.5px);
+  background-attachment: local;
+}
+.respond-field input:focus-visible,
+.respond-field textarea:focus-visible,
+.respond-consent input:focus-visible,
+.respond-btn:focus-visible,
+.respond-summary:focus-visible,
+.respond-summary a:focus-visible,
+.respond-done:focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 2px;
+}
+.respond-field [aria-invalid="true"] {
+  border-color: var(--rust);
+  background-color: rgba(178, 74, 53, 0.06);
+}
+.respond-error {
+  margin: 0;
+  font: 500 12.5px/1.4 var(--font-mono);
+  color: var(--rust);
+}
+.respond-error::before {
+  content: "! ";
+  font-weight: 700;
+}
+.respond-count {
+  margin: 0;
+  font: 11px var(--font-mono);
+  color: var(--ink-faint);
+  text-align: right;
+}
+
+.respond-consent {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.respond-consent input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--amber);
+  cursor: pointer;
+}
+.respond-consent label {
+  text-transform: none;
+  letter-spacing: 0;
+  font: 14px/1.4 "Geist", sans-serif;
+  color: var(--ink);
+  cursor: pointer;
+}
+.respond-consent .respond-error {
+  flex-basis: 100%;
+}
+
+/* Visually hidden, but off-screen rather than display:none so bots still see it. */
+.respond-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.respond-privacy {
+  margin: 18px 0 0;
+  font: 12px var(--font-mono);
+  color: var(--ink-soft);
+}
+.respond-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+}
+.respond-btn {
+  font: 600 13px/1 var(--font-mono);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--paper-2);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 12px 20px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.respond-btn.is-primary {
+  background: var(--amber);
+}
+.respond-btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.respond-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.respond-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.respond-notice {
+  margin: 0;
+  flex: 1;
+  min-width: 220px;
+  font: 13px/1.4 var(--font-mono);
+  color: var(--ink-soft);
+}
+.respond-notice.is-error {
+  color: var(--rust);
+}
+
+.respond-summary {
+  border: 2px solid var(--rust);
+  border-radius: 4px;
+  background: rgba(178, 74, 53, 0.06);
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  font: 13px/1.5 var(--font-mono);
+  color: var(--rust);
+}
+.respond-summary ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+.respond-summary a {
+  color: var(--rust);
+  text-decoration: underline;
+}
+
+.respond-stamp {
+  display: inline-block;
+  font: 700 14px/1 var(--font-mono);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--mint-deep);
+  border: 3px solid currentColor;
+  border-radius: 4px;
+  padding: 6px 12px;
+  transform: rotate(-7deg);
+  animation: respond-stamp 0.35s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+.respond-stamp.is-returned {
+  color: var(--rust);
+  font-size: 11px;
+  padding: 4px 8px;
+  margin-right: 10px;
+}
+@keyframes respond-stamp {
+  from {
+    transform: rotate(-7deg) scale(1.8);
+    opacity: 0;
+  }
+}
+.respond-done {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 6px 0;
+}
+.respond-done p {
+  margin: 0;
+  font-size: 17px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .respond-stamp {
+    animation: none;
+  }
+  .respond-btn {
+    transition: none;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .respond-grid {
+    grid-template-columns: 1fr;
+  }
+  .respond-file {
+    padding: 22px 16px 20px;
+    box-shadow: 6px 6px 0 var(--paper-3), 6px 6px 0 2px var(--ink);
+  }
+}
+
+/* Contact section: the call-to-action where the phone number used to be. */
+.contact-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font: 600 14px/1 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: var(--amber);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  padding: 10px 16px;
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+}
+.contact-cta:hover {
+  color: var(--ink);
+  transform: translate(-1px, -1px);
+}
+.contact-cta:focus-visible {
+  outline: 3px solid var(--amber);
+  outline-offset: 2px;
+}

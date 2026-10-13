@@ -6,6 +6,7 @@ import { createOpenAICompatibleProvider, ProviderError, sanitizeCitations } from
 import { AUDIENCES, buildPitch } from "../../src/assistant/skills/pitch.ts";
 import { buildTourStops, createTour } from "../../src/assistant/skills/tour.ts";
 import { TOOLS, toolSchemas } from "../../src/assistant/tools.ts";
+import { phoneLeaks } from "../helpers/phone.ts";
 
 const core = createAssistantCore();
 
@@ -37,8 +38,8 @@ describe("tools", () => {
 
   test("get_contact never exposes the phone number", () => {
     const out = JSON.stringify(core.runTool("get_contact"));
-    assert.ok(!out.includes(profile.contact.phone.display));
     assert.ok(!out.includes("tel:"));
+    assert.ok(!out.includes(profile.contact.email.display));
   });
 });
 
@@ -60,7 +61,7 @@ describe("pitch", () => {
       const pitch = buildPitch(profile, audience);
       const words = pitch.text.split(/\s+/).length;
       assert.ok(words > 8 && words < 120, `${words} words`);
-      assert.ok(!pitch.text.includes(profile.contact.phone.display));
+      assert.deepEqual(phoneLeaks(pitch.text), []);
       for (const action of pitch.actions) assert.ok(action.href || action.anchor || action.skill, action.label);
     });
   }

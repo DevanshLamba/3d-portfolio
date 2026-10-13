@@ -34,6 +34,10 @@ export interface Project {
   /** Shown on the card only; never indexed. */
   demo?: { username: string; password: string };
   links?: LinkItem[];
+  /** Whether the source is public (with its licence) or private. */
+  repo?: { visibility: "public" | "private"; license?: string };
+  /** False for projects that have no public deployment yet. */
+  deployed?: boolean;
 }
 
 export interface CareerEntry {
@@ -100,7 +104,7 @@ export interface PitchConfig {
   label: string;
   projectIds: string[];
   skillGroupIds: string[];
-  actions: ("resume" | "linkedin" | "github" | "contact" | "work" | "match" | "tour" | `project:${string}`)[];
+  actions: ("resume" | "linkedin" | "github" | "contact" | "respond" | "work" | "match" | "tour" | `project:${string}`)[];
 }
 
 export interface TourStopConfig {
@@ -108,7 +112,7 @@ export interface TourStopConfig {
   /** DOM id of the section the stop points at. */
   targetId: string;
   title: string;
-  kind: "intro" | "about" | "services" | "career" | "work" | "contact";
+  kind: "intro" | "about" | "services" | "career" | "work" | "contact" | "respond";
 }
 
 export interface ProfileData {
@@ -117,6 +121,7 @@ export interface ProfileData {
   role: string;
   headline: string;
   location: string;
+  hometown?: string;
   site: string;
   resume: string;
   about: string;
@@ -129,7 +134,8 @@ export interface ProfileData {
   achievements: Achievement[];
   notes: Note[];
   contact: {
-    phone: { display: string; href: string; private: true };
+    /** Shown in the Contact section only; never indexed by the assistant. */
+    email: { display: string; href: string; private: true };
     connect: LinkItem;
     focus: string[];
     socials: SocialLink[];
@@ -161,12 +167,14 @@ export const profile: ProfileData = {
   role: "Backend engineer",
   headline: "Backend Systems & Automation",
   location: "Pune, Maharashtra, India",
+  hometown: "Chhindwara, Madhya Pradesh",
   site: "https://devanshlamba.in/",
-  // The one place the résumé is linked from: the corner button, the
-  // assistant's contact answer, the recruiter pitch and the get_contact tool.
-  // The current PDF includes a phone number; before deploying, point this at a
-  // phone-free copy in public/, or set it to "" to hide every résumé link.
-  resume: "/Devansh_Lamba_Resume.pdf",
+  // The one place every résumé link comes from: the corner button, the
+  // assistant's contact answer, the recruiter pitch, the palette and the
+  // get_contact tool. Empty hides all of them. Keep it empty until a
+  // phone-free résumé exists, then save it as public/resume.pdf and set this
+  // to "/resume.pdf".
+  resume: "",
 
   about:
     "I'm a backend engineer who builds systems that ship, not slideware. I designed and built Siliqo solo — a multi-tenant agentic customer support platform with 7,400+ lines of code, 38 API endpoints, and 68 passing tests, running RAG on PostgreSQL + pgvector behind a provider-agnostic LLM layer across OpenAI, Anthropic, and Google. Right now I'm building Vayris, an open-source local-first AI agent for Windows, and I founded Ordo, a hyperlocal quick-commerce platform, taking it from an idea to real APIs and a live mobile app. What I care about: architecture that holds up under real usage, automation that removes grunt work, and code that's still readable a year later. Outside engineering, I document the process — currently at 1K+ subscribers across platforms.",
@@ -252,6 +260,8 @@ export const profile: ProfileData = {
       image: "/images/siliqo-cover.webp",
       alt: "Siliqo cover — “Agentic AI customer support, as an API”, with RAG on pgvector, tool-calling and human handoff, and figures for lines of backend, API endpoints and passing tests.",
       link: "https://siliqo-beta.vercel.app/",
+      links: [{ label: "Live site", href: "https://siliqo-beta.vercel.app/" }],
+      repo: { visibility: "private" },
       status: "live",
       period: "Sep 2026 - Present",
       role: "Solo builder",
@@ -271,6 +281,11 @@ export const profile: ProfileData = {
       image: "/images/vayris-cover.webp",
       alt: "Vayris cover — “An agent that never leaves your machine”, an open-source local-first desktop agent, with Zero-LLM, Fast LLM and Deep agentic LLM routing paths.",
       link: "https://vayris-website.vercel.app/",
+      links: [
+        { label: "GitHub", href: "https://github.com/DevanshLamba/vayris-ai" },
+        { label: "Website", href: "https://vayris-website.vercel.app/" },
+      ],
+      repo: { visibility: "public", license: "Apache 2.0" },
       status: "live",
       period: "Aug 2026 - Present",
       role: "Independent builder",
@@ -289,6 +304,8 @@ export const profile: ProfileData = {
       image: "/images/ordo-cover.webp",
       alt: "Ordo cover — “Groceries in five minutes”, hyperlocal quick-commerce for retailers, customers and riders, launching in Pune.",
       link: "https://ordo-website-two.vercel.app/",
+      links: [{ label: "Landing site", href: "https://ordo-website-two.vercel.app/" }],
+      deployed: false,
       status: "in-development",
       period: "Jan 2025 - Present",
       role: "Founder & developer",
@@ -444,12 +461,25 @@ export const profile: ProfileData = {
 
   // Add notes here to teach the assistant things the page doesn't say, e.g.
   // { id: "looking-for", title: "What he's looking for", text: "…", tags: ["hiring", "role", "internship"] }
-  notes: [],
+  notes: [
+    {
+      id: "looking-for",
+      title: "What he's looking for",
+      text: "He is looking for a job or an internship as an AI, backend and automation engineer.",
+      tags: ["hiring", "hire", "role", "roles", "job", "internship", "intern", "opportunity", "open", "looking", "position"],
+    },
+    {
+      id: "location",
+      title: "Where he can work",
+      text: "He is based in Pune and his home town is Chhindwara, Madhya Pradesh. He is open to roles in Pune, in Bangalore or remote, depending on the offer.",
+      tags: ["location", "based", "relocate", "relocation", "remote", "onsite", "bangalore", "bengaluru", "pune", "hometown", "from", "city"],
+    },
+  ],
 
   contact: {
     // Rendered in the Contact section only. `private` keeps it out of the
     // assistant's index so it can't be scraped from a chat answer.
-    phone: { display: "+91 7692968555", href: "tel:+917692968555", private: true },
+    email: { display: "devansh@devanshlamba.in", href: "mailto:devansh@devanshlamba.in", private: true },
     connect: {
       label: "LinkedIn — devanshlamba",
       href: "https://www.linkedin.com/in/devanshlamba/",
@@ -475,25 +505,25 @@ export const profile: ProfileData = {
         label: "Recruiter",
         projectIds: ["siliqo", "vayris", "ordo"],
         skillGroupIds: ["languages", "backend", "ai"],
-        actions: ["resume", "linkedin", "match"],
+        actions: ["respond", "resume", "linkedin", "match"],
       },
       engineer: {
         label: "Engineer",
         projectIds: ["siliqo", "vayris"],
         skillGroupIds: ["backend", "ai"],
-        actions: ["github", "work", "project:vayris"],
+        actions: ["respond", "github", "work", "project:vayris"],
       },
       founder: {
         label: "Founder",
         projectIds: ["ordo", "siliqo"],
         skillGroupIds: [],
-        actions: ["linkedin", "project:ordo", "contact"],
+        actions: ["respond", "linkedin", "project:ordo"],
       },
       browsing: {
         label: "Just browsing",
         projectIds: ["siliqo", "vayris", "ordo", "cloudtasks"],
         skillGroupIds: [],
-        actions: ["tour", "work"],
+        actions: ["tour", "work", "respond"],
       },
     },
     tour: [
@@ -503,6 +533,7 @@ export const profile: ProfileData = {
       { id: "career", targetId: "career", title: "Journey", kind: "career" },
       { id: "work", targetId: "work", title: "Work", kind: "work" },
       { id: "contact", targetId: "contact", title: "Contact", kind: "contact" },
+      { id: "respond", targetId: "respond", title: "Leave a response", kind: "respond" },
     ],
   },
 };

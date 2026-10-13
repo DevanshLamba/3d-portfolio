@@ -9,6 +9,7 @@ import {
   type PitchAction,
   type ProviderPreset,
 } from "../../assistant";
+import { openResponseForm } from "../ResponseForm/openResponseForm";
 import { navigateToSection } from "./sceneNavigation";
 import type { Entry } from "./useAssistant";
 
@@ -56,6 +57,15 @@ const AnswerView = ({ result }: { result: AskResult }) => {
       {result.outcome !== "chat" && <Stamp ok={result.grounded}>{result.grounded ? "Verified" : "No record"}</Stamp>}
       <p className="assistant-pre">{result.answer}</p>
       {result.fallbackReason && <p className="assistant-note">{result.fallbackReason}</p>}
+      {result.actions.length > 0 && (
+        <div className="assistant-row assistant-answer-actions">
+          {result.actions.map((a) => (
+            <button key={a.kind} type="button" className="assistant-btn is-primary" onClick={openResponseForm}>
+              {a.label}
+            </button>
+          ))}
+        </div>
+      )}
       {result.citations.length > 0 && (
         <div className="assistant-sources">
           <span className="assistant-label">Sources</span>

@@ -56,6 +56,8 @@ function narrate(p: ProfileData, stop: TourStopConfig): string {
       const channels = p.contact.socials.filter((s) => usableLink(s.href)).map((s) => s.label);
       return `Find him on ${listOf(channels)}.${usableLink(p.resume) ? " The résumé link sits in the corner." : ""}`;
     }
+    case "respond":
+      return `Want to talk? Leave your name, email and a short message here and ${p.firstName} will reply by email.`;
   }
 }
 

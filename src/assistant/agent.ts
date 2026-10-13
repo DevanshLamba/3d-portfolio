@@ -121,7 +121,7 @@ function synthesise(tool: string, args: Record<string, unknown>, output: Obs, fi
     case "get_contact": {
       const socials = output.socials as { label: string; href: string }[];
       const primary = output.primary as { href: string } | undefined;
-      return `${primary ? `LinkedIn is the best way to reach ${firstName}: ${primary.href}. ` : ""}Also on ${socials
+      return `The best way to reach ${firstName} is the "Leave a response" form on this page; he replies by email. ${primary ? `He is also on LinkedIn: ${primary.href}. ` : ""}Follow his work on ${socials
         .filter((s) => s.href !== primary?.href)
         .map((s) => s.label)
         .join(", ")}.`;

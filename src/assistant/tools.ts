@@ -38,6 +38,9 @@ export function publicProject(project: Project) {
     limits: project.limits,
     link: usableLink(project.link),
     links: (project.links ?? []).filter((l) => usableLink(l.href)),
+    code: project.repo?.visibility ?? "unspecified",
+    license: project.repo?.license,
+    deployed: project.deployed ?? project.status !== "in-development",
   };
 }
 
@@ -136,11 +139,12 @@ export const TOOLS: ToolDef[] = [
   },
   {
     name: "get_contact",
-    description: "Public ways to get in touch. Never includes a phone number.",
+    description: "How to get in touch: the response form first, then public profiles. Never includes a phone number or email.",
     parameters: noArgs,
     run(_args, ctx) {
       const { contact, resume } = ctx.profile;
       return {
+        preferred: { label: "Leave a response form", anchor: "#respond", note: "Leave your details; he replies by email." },
         primary: usableLink(contact.connect.href) ? { label: "LinkedIn", href: contact.connect.href } : undefined,
         socials: contact.socials.filter((s) => usableLink(s.href)).map((s) => ({ label: s.label, href: s.href })),
         resume: usableLink(resume),

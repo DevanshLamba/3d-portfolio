@@ -19,8 +19,11 @@ function contactApi(): Plugin {
   let env: Record<string, string | undefined> = {};
 
   const attach = (middlewares: Connect.Server, load: () => Promise<ContactModule>) => {
-    middlewares.use("/api/contact", async (incoming, res) => {
+    middlewares.use(async (incoming, res, next) => {
       const req = incoming as unknown as NodeRequest;
+      // Exact path only: Connect would also route "/api/contact.ts" here, which
+      // is the module the browser loads for the form's validation rules.
+      if ((req.originalUrl ?? "").split("?")[0] !== "/api/contact") return next();
       const chunks: Uint8Array[] = [];
       for await (const chunk of req) chunks.push(chunk);
       const body = new Uint8Array(chunks.reduce((n, c) => n + c.length, 0));

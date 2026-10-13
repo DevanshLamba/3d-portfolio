@@ -1,7 +1,8 @@
 // Turns the profile into small, tagged, citable facts. This is the only place
 // that decides what the assistant is allowed to know, so the privacy rules
 // live here too:
-//   - contact.phone and project demo credentials are never read
+//   - contact.email and project demo credentials are never read; there is
+//     no phone number in the profile at all
 //   - anything that still looks like a phone number is redacted
 //   - blank or placeholder links are skipped instead of producing dead links
 
@@ -57,6 +58,21 @@ function sentenceCase(text: string): string {
   return text === text.toUpperCase()
     ? text.toLowerCase().replace(/\b(ai|api|apis|llm)\b/g, (m) => m.toUpperCase())
     : text;
+}
+
+function codeFact(project: Project, firstName: string): string | null {
+  const name = project.title;
+  if (project.repo?.visibility === "private") {
+    return `${name}'s source code is private, so there is no public repository, but ${firstName} can walk you through the code on request.`;
+  }
+  if (project.repo?.visibility === "public") {
+    const github = usableLink(project.links?.find((l) => /github/i.test(l.label) || /github\.com/.test(l.href))?.href);
+    return (
+      `${name} is open source${project.repo.license ? ` under the ${project.repo.license} license` : ""}.` +
+      (github ? ` Its code is on GitHub: ${github}` : "")
+    );
+  }
+  return null;
 }
 
 function statusWord(project: Project): string {
@@ -145,7 +161,11 @@ export function buildKnowledge(p: ProfileData): Chunk[] {
       project.role ? `On ${name}, ${p.firstName}'s role: ${project.role.toLowerCase()}.` : "",
       project.summary ?? "",
       `${name} is built with ${project.stack.join(", ")}.`,
-      link ? `${name} link: ${link}` : "",
+      project.deployed === false
+        ? `${name} is not live yet: it has no public deployment${link ? `, only a landing site at ${link}` : ""}.`
+        : link
+          ? `${name} link: ${link}`
+          : "",
     ]
       .filter(Boolean)
       .join(" ");
@@ -159,6 +179,18 @@ export function buildKnowledge(p: ProfileData): Chunk[] {
       tags: [...nameTags, "projects", "built", "build", "work", "portfolio", "overview", "stack", ...project.stack.flatMap(words)],
       weight: 1.15,
     });
+
+    const code = codeFact(project, p.firstName);
+    if (code) {
+      add({
+        id: `project:${project.id}:code`,
+        sourceId: `project:${project.id}`,
+        section: "projects",
+        title: `${name}: source code`,
+        text: code,
+        tags: [...nameTags, "code", "source", "repo", "repository", "github", "open source", "opensource", "license", "private", "public", "see"],
+      });
+    }
 
     project.highlights?.forEach((highlight, i) => {
       add({
@@ -286,11 +318,12 @@ export function buildKnowledge(p: ProfileData): Chunk[] {
     section: "contact",
     title: "How to get in touch",
     text:
-      (primary ? `The best way to reach ${p.firstName} is LinkedIn: ${primary}. ` : "") +
-      (socials.length ? `He is also on ${socials.map((s) => `${s.label} (${s.href})`).join(", ")}. ` : "") +
-      (resume ? `His résumé is linked on the page at ${resume}. ` : "") +
-      "Phone numbers and other private details aren't shared through this assistant.",
-    tags: ["contact", "reach", "hire", "hiring", "touch", "connect", "message", "email", "mail", "phone", "number", "call", "socials", "social", "linkedin", "github", "twitter", "youtube", "instagram", "resume", "cv", "available", "availability"],
+      `The best way to reach ${p.firstName} is the "Leave a response" form in the Contact section: leave your name, email and a short message and he replies by email. ` +
+      "He prefers that to phone calls and doesn't share a phone number here. " +
+      (primary ? `He is also on LinkedIn: ${primary}. ` : "") +
+      (socials.length ? `You can follow his work on ${socials.map((s) => `${s.label} (${s.href})`).join(", ")}. ` : "") +
+      (resume ? `His résumé is linked on the page at ${resume}. ` : ""),
+    tags: ["contact", "reach", "hire", "hiring", "touch", "connect", "message", "email", "mail", "phone", "call", "socials", "social", "linkedin", "github", "twitter", "youtube", "instagram", "resume", "cv", "available", "availability", "form", "response", "respond", "whatsapp", "talk", "interview"],
   });
 
   return chunks;

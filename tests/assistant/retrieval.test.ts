@@ -83,10 +83,10 @@ describe("grounded answers", () => {
     assert.match(result.answer, /“Kubernetes”/);
   });
 
-  test("asking for the phone number never returns it", () => {
+  test("asking for a phone number points to the response form instead", () => {
     const result = core.ask("What is his phone number?");
-    assert.doesNotMatch(result.answer, /7692968555|76929/);
-    assert.match(result.answer, /aren't shared/);
+    assert.doesNotMatch(result.answer, /\d{5}/);
+    assert.match(result.answer, /doesn't share a phone number/);
   });
 
   test("small talk is answered without pretending to cite", () => {

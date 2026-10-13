@@ -10,7 +10,7 @@ import type { Chunk, RetrievedChunk } from "./types.ts";
 // says "study". Expansion terms help recall but never count as coverage.
 const RAW_EXPANSIONS: [string[], string][] = [
   [["study", "studied", "studying", "college", "university", "school", "degree", "graduate", "graduation", "cgpa", "gpa", "qualification"], "education"],
-  [["reach", "contact", "email", "mail", "hire", "touch", "phone", "number", "call", "message", "dm"], "contact"],
+  [["reach", "contact", "email", "mail", "hire", "touch", "phone", "call", "message", "dm"], "contact"],
   [["stack", "tech", "technologies", "tools", "languages", "know", "knows", "proficient", "familiar", "skilled"], "skills"],
   [["job", "jobs", "worked", "experience", "career", "history", "timeline", "journey"], "experience"],
   [["built", "build", "made", "created", "shipped", "portfolio", "projects"], "project"],
@@ -19,6 +19,7 @@ const RAW_EXPANSIONS: [string[], string][] = [
   [["who", "yourself", "introduce", "introduction"], "intro"],
   [["proud", "accomplish", "accomplishments", "awards", "achievement"], "achievements"],
   [["offer", "services", "freelance", "consult", "consulting"], "services"],
+  [["where", "hometown", "born", "grew", "from", "city", "based", "lives", "relocate", "remote"], "location"],
 ];
 
 const EXPANSION_WEIGHT = 0.5;
