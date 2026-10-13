@@ -26,7 +26,7 @@
 .header ul li {
   margin-left: 0px;
   letter-spacing: 1px;
-  color: #ccc;
+  color: var(--ink);
   font-weight: 600;
   cursor: pointer;
 }
@@ -55,7 +55,7 @@
     font-size: 14px;
   }
   .header ul li {
-    color: #eae5ec;
+    color: var(--ink);
   }
   .navbar-title {
     font-size: 16px;
@@ -80,4 +80,23 @@
   .navbar-title {
     font-size: 18px;
   }
+}
+
+.header ul,
+.navbar-connect {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+.navbar-connect {
+  text-transform: none;
+  color: var(--ink-soft);
+}
+.navbar-title {
+  font-family: var(--font-mono);
+  border: 2px solid var(--rust);
+  color: var(--rust);
+  padding: 2px 8px;
+  border-radius: 4px;
+  transform: rotate(-3deg);
+  align-self: center;
 }

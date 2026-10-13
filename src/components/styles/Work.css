@@ -30,8 +30,8 @@
 .carousel-track-container {
   overflow: hidden;
   width: 100%;
-  border-top: 1px solid #363636;
-  border-bottom: 1px solid #363636;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -93,7 +93,7 @@
 
 .carousel-category {
   font-weight: 200;
-  color: #adacac;
+  color: var(--ink-soft);
   margin: 0;
   font-size: 16px;
 }
@@ -112,14 +112,14 @@
 
 .carousel-tools p {
   font-weight: 200;
-  color: #adacac;
+  color: var(--ink-soft);
   margin: 6px 0 0;
   font-size: 15px;
 }
 
 .carousel-summary {
   font-weight: 200;
-  color: #adacac;
+  color: var(--ink-soft);
   margin: 4px 0 0;
   font-size: 15px;
   max-width: 60ch;
@@ -144,7 +144,7 @@
   position: relative;
   padding-left: 18px;
   font-weight: 200;
-  color: #adacac;
+  color: var(--ink-soft);
   font-size: 15px;
 }
 
@@ -163,9 +163,9 @@
 .carousel-limits {
   margin: 16px 0 0;
   padding-left: 12px;
-  border-left: 1px solid #363636;
+  border-left: 2px solid var(--rust);
   font-weight: 200;
-  color: #8f8f8f;
+  color: var(--ink-faint);
   font-size: 14px;
   max-width: 60ch;
 }
@@ -183,15 +183,16 @@
   gap: 6px;
   padding: 8px 16px;
   border-radius: 50px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(255, 255, 255, 0.05);
-  font-size: 14px;
+  border: 1px solid var(--line);
+  background: var(--paper-2);
+  font-family: var(--font-mono);
+  font-size: 13px;
   transition: all 0.3s ease;
 }
 
 .carousel-links a:hover,
 .carousel-links a:focus-visible {
-  background: rgba(94, 234, 212, 0.15);
+  background: rgba(212, 119, 42, 0.15);
   border-color: var(--accentColor);
   color: var(--accentColor);
 }
@@ -207,7 +208,7 @@
   margin: 12px 0 0;
   font-size: 13px;
   font-weight: 200;
-  color: #8f8f8f;
+  color: var(--ink-faint);
   user-select: text;
   -webkit-user-select: text;
 }
@@ -226,9 +227,9 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #eae5ec;
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  color: var(--ink);
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -242,10 +243,10 @@
 }
 
 .carousel-arrow:hover {
-  background: rgba(94, 234, 212, 0.15);
+  background: rgba(212, 119, 42, 0.15);
   border-color: var(--accentColor);
   color: var(--accentColor);
-  box-shadow: 0 0 20px rgba(94, 234, 212, 0.15);
+  box-shadow: 0 0 20px rgba(212, 119, 42, 0.15);
 }
 
 .carousel-arrow-left {
@@ -268,7 +269,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--ink-faint);
   background: transparent;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -277,13 +278,13 @@
 
 .carousel-dot:hover {
   border-color: var(--accentColor);
-  background: rgba(94, 234, 212, 0.2);
+  background: rgba(212, 119, 42, 0.2);
 }
 
 .carousel-dot-active {
   background: var(--accentColor);
   border-color: var(--accentColor);
-  box-shadow: 0 0 8px rgba(94, 234, 212, 0.4);
+  box-shadow: 0 0 8px rgba(212, 119, 42, 0.4);
 }
 
 /* ── Work Image (reused) ── */
@@ -309,8 +310,7 @@
   justify-content: center;
   align-items: center;
   font-size: 25px;
-  box-shadow: 0px 0px 10px 0px rgba(255, 255, 255, 0.5),
-    inset 0px 0px 10px 0px #393939;
+  box-shadow: 0px 0px 10px 0px rgba(46, 42, 36, 0.3);
   transition: 0.3s;
   opacity: 0;
 }
@@ -463,7 +463,7 @@
     min-width: 100%;
     width: 100%;
     padding: 30px 0;
-    border-bottom: 1px solid #262626;
+    border-bottom: 1px solid var(--line);
   }
 
   .carousel-slide:last-child {
@@ -473,5 +473,36 @@
   .carousel-arrow,
   .carousel-dots {
     display: none;
+  }
+}
+
+/* Each project reads as a case file. */
+.carousel-number h3 {
+  font-family: var(--font-mono);
+  font-size: 40px;
+  color: var(--rust);
+  opacity: 0.85;
+  border: 2px solid var(--rust);
+  border-radius: 4px;
+  padding: 4px 10px;
+  transform: rotate(-4deg);
+}
+.carousel-number h3::before {
+  content: "CASE ";
+  font-size: 0.45em;
+  vertical-align: middle;
+}
+.carousel-category,
+.carousel-tools .tools-label,
+.carousel-demo {
+  font-family: var(--font-mono);
+}
+.work-image img {
+  border: 1px solid var(--line);
+  box-shadow: 6px 6px 0 var(--paper-3);
+}
+@media only screen and (max-width: 900px) {
+  .carousel-number h3 {
+    font-size: 28px;
   }
 }
