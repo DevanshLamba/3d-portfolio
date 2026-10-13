@@ -2,6 +2,14 @@ import { createServer, defineConfig, loadEnv, type Connect, type Plugin } from "
 import react from "@vitejs/plugin-react";
 
 type ContactModule = typeof import("./api/contact");
+type ChatModule = typeof import("./server/chat");
+type Handler = (request: Request, env: Record<string, string | undefined>, deps: { fetch: typeof fetch; now: () => number; log: (m: string) => void }) => Promise<Response>;
+
+// Same paths as on Vercel: api/contact.ts, and api/chat.js (bundled from server/chat.ts).
+const ROUTES: Record<string, { module: string; load: (m: unknown) => Handler }> = {
+  "/api/contact": { module: "/api/contact.ts", load: (m) => (m as ContactModule).handleContact as Handler },
+  "/api/chat": { module: "/server/chat.ts", load: (m) => (m as ChatModule).handleChat as Handler },
+};
 
 // The parts of Node's IncomingMessage used here (Node's types aren't installed).
 type NodeRequest = AsyncIterable<Uint8Array> & {
@@ -11,19 +19,20 @@ type NodeRequest = AsyncIterable<Uint8Array> & {
 };
 
 /**
- * Serves api/contact.ts at /api/contact for `npm run dev` and `npm run
- * preview`, the way Vercel does in production. Settings come from .env.local
- * on this machine and are never exposed to the browser bundle.
+ * Serves the API routes for `npm run dev` and `npm run preview`, the way
+ * Vercel does in production. Settings come from .env.local on this machine
+ * and are never exposed to the browser bundle.
  */
-function contactApi(): Plugin {
+function apiRoutes(): Plugin {
   let env: Record<string, string | undefined> = {};
 
-  const attach = (middlewares: Connect.Server, load: () => Promise<ContactModule>) => {
+  const attach = (middlewares: Connect.Server, load: (module: string) => Promise<unknown>) => {
     middlewares.use(async (incoming, res, next) => {
       const req = incoming as unknown as NodeRequest;
-      // Exact path only: Connect would also route "/api/contact.ts" here, which
-      // is the module the browser loads for the form's validation rules.
-      if ((req.originalUrl ?? "").split("?")[0] !== "/api/contact") return next();
+      // Exact paths only: "/api/contact.ts" is the module the browser loads
+      // for the form's validation rules.
+      const route = ROUTES[(req.originalUrl ?? "").split("?")[0]];
+      if (!route) return next();
       const chunks: Uint8Array[] = [];
       for await (const chunk of req) chunks.push(chunk);
       const body = new Uint8Array(chunks.reduce((n, c) => n + c.length, 0));
@@ -34,13 +43,13 @@ function contactApi(): Plugin {
       }
       const headers = new Headers();
       for (const [key, value] of Object.entries(req.headers)) if (typeof value === "string") headers.set(key, value);
-      const request = new Request(`http://localhost${req.originalUrl ?? "/api/contact"}`, {
+      const request = new Request(`http://localhost${req.originalUrl}`, {
         method: req.method,
         headers,
         body: req.method === "GET" || req.method === "HEAD" ? undefined : new TextDecoder().decode(body),
       });
-      const { handleContact } = await load();
-      const response = await handleContact(request, env, { fetch, now: Date.now, log: (m) => console.log(`[contact] ${m}`) });
+      const handler = route.load(await load(route.module));
+      const response = await handler(request, env, { fetch, now: Date.now, log: (m) => console.log(`[api] ${m}`) });
       res.statusCode = response.status;
       response.headers.forEach((value, key) => res.setHeader(key, value));
       res.end(await response.text());
@@ -48,7 +57,7 @@ function contactApi(): Plugin {
   };
 
   return {
-    name: "contact-api",
+    name: "api-routes",
     configResolved(config) {
       const loaded = loadEnv(config.mode, config.root, "");
       // Only the form's own settings; locally a missing key means a dry run.
@@ -57,20 +66,20 @@ function contactApi(): Plugin {
         CONTACT_TO_EMAIL: loaded.CONTACT_TO_EMAIL,
         CONTACT_FROM_EMAIL: loaded.CONTACT_FROM_EMAIL,
         ALLOWED_ORIGINS: loaded.ALLOWED_ORIGINS,
+        GEMINI_API_KEY: loaded.GEMINI_API_KEY,
+        GEMINI_MODEL: loaded.GEMINI_MODEL,
       };
     },
     configureServer(server) {
-      attach(server.middlewares, () => server.ssrLoadModule("/api/contact.ts") as Promise<ContactModule>);
+      attach(server.middlewares, (module) => server.ssrLoadModule(module));
     },
     configurePreviewServer(server) {
       // Preview serves built files only, so compile the handler with a small
       // Vite instance on first use.
-      let loader: Promise<ContactModule> | null = null;
-      attach(server.middlewares, () => {
-        loader ??= createServer({ configFile: false, server: { middlewareMode: true, hmr: false }, appType: "custom", logLevel: "silent" }).then(
-          (vite) => vite.ssrLoadModule("/api/contact.ts") as Promise<ContactModule>
-        );
-        return loader;
+      let vite: ReturnType<typeof createServer> | null = null;
+      attach(server.middlewares, async (module) => {
+        vite ??= createServer({ configFile: false, server: { middlewareMode: true, hmr: false }, appType: "custom", logLevel: "silent" });
+        return (await vite).ssrLoadModule(module);
       });
     },
   };
@@ -78,5 +87,5 @@ function contactApi(): Plugin {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), contactApi()],
+  plugins: [react(), apiRoutes()],
 });

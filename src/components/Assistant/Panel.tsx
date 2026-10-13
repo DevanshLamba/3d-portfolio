@@ -116,7 +116,10 @@ const Panel = ({ id, chat, mode, onModeChange, focusKey, onClose, onAction, onSt
       <div className="assistant-log" ref={logRef} aria-live="polite">
         {entries.length === 0 && (
           <div className="assistant-empty">
-            <p className="assistant-note">Answers come only from this site's content, with sources. Everything runs in your browser.</p>
+            <p className="assistant-note">
+              Answers come only from this site's content, with sources. Facts are found in your browser; when available, Gemini on this
+              site's server words the answer from them, so your question is sent there. Nothing is stored.
+            </p>
             <div className="assistant-row">
               {SUGGESTIONS.map((q) => (
                 <button type="button" key={q} className="assistant-btn is-soft" onClick={() => send(q, "ask")}>

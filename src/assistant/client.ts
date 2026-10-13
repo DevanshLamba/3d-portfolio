@@ -119,6 +119,12 @@ export interface AssistantOptions {
   windowEvents?: boolean;
   /** Decides at tour start which stops exist on the current page. */
   isTourStopAvailable?: (targetId: string) => boolean;
+  /**
+   * Endpoint that words grounded answers with the site's own model
+   * (api/chat). Defaults to "/api/chat" in browsers; false turns it off.
+   * Ignored while a visitor's own provider is connected.
+   */
+  siteGeneration?: string | false;
 }
 
 export interface SkillEvidence {
@@ -159,6 +165,7 @@ export function createAssistant(options: AssistantOptions = {}): Assistant {
   let backendInstance: Backend | null = null;
   const backend = () => (backendInstance ??= createBackend(options.backend ?? "auto"));
   let provider: LLMProvider | null = null;
+  let siteEndpoint: string | false = options.siteGeneration ?? (typeof window !== "undefined" ? "/api/chat" : false);
 
   const isAvailable = options.isTourStopAvailable ?? ((id: string) => typeof document === "undefined" || Boolean(document.getElementById(id)));
   const tour = createTour(buildTourStops(profile), { isAvailable: (stop) => isAvailable(stop.targetId) });
@@ -167,6 +174,44 @@ export function createAssistant(options: AssistantOptions = {}): Assistant {
     (["start", "stop", "end"] as const).forEach((type) =>
       tour.on(type, (detail: TourEventDetail) => window.dispatchEvent(new CustomEvent(TOUR_WINDOW_EVENT, { detail })))
     );
+  }
+
+  /**
+   * Asks the site's server to word a grounded answer. The server retrieves on
+   * its own; the result is used only if it used exactly the facts retrieved
+   * here and cites them. Any failure quietly keeps the offline answer.
+   */
+  async function generateOnSite(offline: AskResult, signal?: AbortSignal): Promise<AskResult> {
+    if (!siteEndpoint || !offline.grounded) return offline;
+    const hits = offline.retrieved.slice(0, LLM_CONTEXT_SIZE);
+    const t0 = performance.now();
+    try {
+      const res = await fetch(siteEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: offline.query }),
+        signal,
+      });
+      // Not deployed or not configured: stop asking for the rest of the visit.
+      if (res.status === 404 || res.status === 405 || res.status === 503) siteEndpoint = false;
+      if (!res.ok) return offline;
+      const data = (await res.json()) as { ok?: boolean; answer?: string; model?: string; contextIds?: string[] };
+      if (!data.ok || !data.answer || data.contextIds?.join("|") !== hits.map((h) => h.id).join("|")) return offline;
+      const used = new Set([...data.answer.matchAll(/\[(\d+)\]/g)].map((m) => Number(m[1])));
+      const citations: Citation[] = hits
+        .map((h, i) => ({ n: i + 1, chunkId: h.id, sourceId: h.sourceId, title: h.title, section: h.section, anchor: h.anchor }))
+        .filter((c) => used.has(c.n));
+      if (!citations.length) return offline;
+      return {
+        ...offline,
+        answer: data.answer,
+        citations,
+        generator: `Gemini · ${data.model ?? "server"}`,
+        timings: { ...offline.timings, generationMs: performance.now() - t0 },
+      };
+    } catch {
+      return offline;
+    }
   }
 
   async function generate(offline: AskResult, signal?: AbortSignal): Promise<AskResult> {
@@ -198,7 +243,7 @@ export function createAssistant(options: AssistantOptions = {}): Assistant {
   return {
     async ask(query, opts = {}) {
       const offline = await backend().call<AskResult>("ask", [query, { topK: opts.topK }]);
-      return generate(offline, opts.signal);
+      return provider ? generate(offline, opts.signal) : generateOnSite(offline, opts.signal);
     },
     search: (query, topK) => backend().call("search", [query, topK]),
     matchJob: (text) => backend().call("matchJob", [text]),

@@ -267,7 +267,8 @@ export const ProviderSettings = ({
       ) : (
         <form onSubmit={submit}>
           <p className="assistant-note">
-            Retrieval always runs in your browser. With a key, only the wording step goes to the provider you pick. The key stays in this
+            By default the site's own server words answers with Gemini. Retrieval always runs in your browser. With your own key, only the
+            wording step goes to the provider you pick instead. The key stays in this
             tab's memory and is never saved.
           </p>
           <label>
