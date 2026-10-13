@@ -6,7 +6,7 @@ import { profile } from "../data/profile.ts";
 import type { AskOptions, CoreMethod } from "./core.ts";
 import type { LLMProvider } from "./llm.ts";
 import type { SearchResult } from "./retrieval.ts";
-import { looksLikeJobDescription } from "./skills/jobMatcher.ts";
+import { looksLikeJobDescription } from "./skills/detect.ts";
 import { AUDIENCES, buildPitch, type Pitch } from "./skills/pitch.ts";
 import { buildTourStops, createTour, type Tour, type TourEventDetail } from "./skills/tour.ts";
 import type { AgentRun, AgentStep, AskResult, Citation, JobMatchResult, MatchStatus, MatchEvidence, ToolSchema } from "./types.ts";

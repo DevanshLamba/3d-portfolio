@@ -13,6 +13,8 @@ import { splitSentences } from "../text.ts";
 import type { JobMatchResult, JobMatchRow, MatchEvidence, MatchStatus } from "../types.ts";
 import { COMPILED_SKILLS, SKILLS_BY_ID, matchesAny, type CompiledSkill } from "./taxonomy.ts";
 
+export { looksLikeJobDescription } from "./detect.ts";
+
 type Level = "shipped" | "core" | "listed";
 
 interface EvidenceEntry extends MatchEvidence {
@@ -309,13 +311,3 @@ export function createJobMatcher(p: ProfileData) {
 }
 
 export type JobMatcher = ReturnType<typeof createJobMatcher>;
-
-/** Heuristic for routing a pasted job posting to the matcher instead of Q&A. */
-export function looksLikeJobDescription(text: string): boolean {
-  if (text.length < 220) return false;
-  const lines = text.split(/\r?\n/).filter((l) => l.trim()).length;
-  const cues = text.match(
-    /\b(responsibilit|requirements?|qualifications?|experience with|you will|you'll|we are looking|we're looking|nice to have|must have|years of experience|about the role|the role|job description|apply)/gi
-  );
-  return (cues?.length ?? 0) >= 2 && (lines >= 3 || text.length > 500);
-}
