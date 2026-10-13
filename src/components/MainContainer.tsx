@@ -14,6 +14,8 @@ import { useLoading } from "../context/LoadingProvider";
 const TechStack = lazy(() => import("./TechStack"));
 // Loaded after the intro finishes so it never competes with the 3D scene.
 const Assistant = lazy(() => import("./Assistant"));
+// Dev-only FPS readout; the whole branch is dropped from production builds.
+const DevFps = import.meta.env.DEV ? lazy(() => import("./DevFps")) : null;
 
 const MainContainer = ({ children }: PropsWithChildren) => {
   const { isLoading } = useLoading();
@@ -41,6 +43,11 @@ const MainContainer = ({ children }: PropsWithChildren) => {
       {!isLoading && (
         <Suspense fallback={null}>
           <Assistant />
+        </Suspense>
+      )}
+      {DevFps && (
+        <Suspense fallback={null}>
+          <DevFps />
         </Suspense>
       )}
       {isDesktopView && children}
