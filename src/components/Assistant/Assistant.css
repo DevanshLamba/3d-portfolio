@@ -1,0 +1,118 @@
+/* Structural styles only: position, sizing and scrolling, so the assistant is
+   usable as-is. Restyle or replace freely; nothing else on the site depends on
+   these classes. */
+
+.assistant-root {
+  position: fixed;
+  right: 16px;
+  bottom: 96px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.assistant-panel {
+  width: min(400px, calc(100vw - 32px));
+  max-height: min(70vh, 640px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  overflow: hidden;
+  background: var(--backgroundColor);
+  color: inherit;
+  border: 1px solid currentColor;
+}
+
+.assistant-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assistant-header h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.assistant-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.assistant-log {
+  flex: 1;
+  min-height: 80px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.assistant-msg,
+.assistant-note {
+  margin: 0 0 10px;
+}
+
+.assistant-msg-user {
+  text-align: right;
+}
+
+.assistant-note {
+  opacity: 0.7;
+  font-size: 0.85em;
+}
+
+.assistant-pre {
+  white-space: pre-line;
+}
+
+.assistant-steps pre,
+.assistant-match {
+  font-size: 0.8em;
+}
+
+.assistant-steps pre {
+  max-height: 160px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+.assistant-match {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.assistant-match th,
+.assistant-match td {
+  text-align: left;
+  vertical-align: top;
+  padding: 2px 4px;
+}
+
+.assistant-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.assistant-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  font: inherit;
+}
+
+.assistant-settings form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.assistant-root a {
+  text-decoration: underline;
+}

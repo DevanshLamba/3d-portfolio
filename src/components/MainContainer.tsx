@@ -9,10 +9,14 @@ import SocialIcons from "./SocialIcons";
 import WhatIDo from "./WhatIDo";
 import Work from "./Work";
 import setSplitText from "./utils/splitText";
+import { useLoading } from "../context/LoadingProvider";
 
 const TechStack = lazy(() => import("./TechStack"));
+// Loaded after the intro finishes so it never competes with the 3D scene.
+const Assistant = lazy(() => import("./Assistant"));
 
 const MainContainer = ({ children }: PropsWithChildren) => {
+  const { isLoading } = useLoading();
   const [isDesktopView, setIsDesktopView] = useState<boolean>(
     window.innerWidth > 1024
   );
@@ -34,6 +38,11 @@ const MainContainer = ({ children }: PropsWithChildren) => {
       <Cursor />
       <Navbar />
       <SocialIcons />
+      {!isLoading && (
+        <Suspense fallback={null}>
+          <Assistant />
+        </Suspense>
+      )}
       {isDesktopView && children}
       <div id="smooth-wrapper">
         <div id="smooth-content">
