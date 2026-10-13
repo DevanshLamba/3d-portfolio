@@ -120,6 +120,9 @@ Live site: [https://akashrmalhotra.netlify.app/](https://akashrmalhotra.netlify.
 - `npm run preview`  
   Serves the production build locally for verification.
 
+- `npm run og`  
+  Rebuilds the link-preview card from the profile data (needs Chrome or Edge installed).
+
 - `npm run lint`  
   Runs ESLint checks across the project.
 
@@ -153,7 +156,11 @@ An in-browser assistant that answers questions about the portfolio with no API k
 - **Answers**: composed only from retrieved facts, with `[n]` citations. If nothing relevant is found, the assistant says so.
 - **Skills**: a job matcher (Shipped / Core / Listed / Transferable / Gap, with evidence), audience pitches, and a guided tour.
 - **Tools**: a registry with JSON schemas and a plan, act, observe loop that reports each step.
-- **Performance**: the engine runs in a Web Worker that starts on first use. The panel loads after the intro finishes.
+- **Inspector**: under each answer, "How this was found" shows the query terms (crossing out words the portfolio never mentions), each retrieved fact's score and rerank signals, and which facts were used or dropped.
+- **Lab**: five from-scratch ML demos on a CRT-style screen: a neural network trainer with hand-written backprop, a RAG playground (your text, your chunk size and overlap), self-attention heatmaps, step-by-step k-means, and polynomial regression that shows overfitting. The maths lives in `src/lab/`.
+- **Command palette**: Ctrl+K (⌘K on a Mac) jumps to sections, starts the tour, picks a pitch, opens a Lab demo or links, or asks whatever you type.
+- **Character**: the 3D character raises its eyebrows while the assistant searches and types faster when an answer lands (no typing burst under reduced motion).
+- **Performance**: the engine runs in a Web Worker that starts on the first question. The panel loads after the intro finishes, the Lab is its own chunk loaded on first open, and its training loops work in small per-frame time budgets.
 
 ```ts
 import { getAssistant, createPresetProvider } from "./assistant";
@@ -170,7 +177,7 @@ window.addEventListener("portfolio:tour", (e) => console.log(e.detail));
 assistant.setProvider(createPresetProvider("groq", pastedKey));
 ```
 
-The panel in `src/components/Assistant/` is a thin, mostly unstyled mount: restyle `Assistant.css` or replace the component and keep the hooks. Tour stops call `navigateToSection()`, which scrolls through ScrollSmoother so the camera timelines follow, and jumps instead of animating under `prefers-reduced-motion`.
+The UI lives in `src/components/Assistant/`: `Assistant.css` and `Lab/Lab.css` hold its styles, and the logic is in `useAssistant`, `useSceneTour` and `src/assistant/`, so the components can be replaced without touching it. Tour stops call `navigateToSection()`, which scrolls through ScrollSmoother so the camera timelines follow, and jumps instead of animating under `prefers-reduced-motion`.
 
 **Privacy.** `contact.phone` and project demo credentials are never indexed. Email addresses and phone-like digit runs are redacted from everything the assistant can show: indexed facts, answers, pitches, tour text and tool output. Blank or placeholder links are skipped. `tests/assistant/privacy.test.ts` fails if any of those values gets through. API keys are pasted at runtime, held in memory only, and never stored. Don't hardcode a key anywhere in this repo; anything in frontend code is public.
 
@@ -178,7 +185,24 @@ The panel in `src/components/Assistant/` is a thin, mostly unstyled mount: resty
 
 **Editing.** Add or change facts in `profile.ts` and the index, matcher, pitches and tour pick them up. Tour stops and per-audience pitch choices are under `profile.assistant`. The job matcher's skill vocabulary is in `src/assistant/skills/taxonomy.ts`.
 
-**Tests.** `npm test` runs the retrieval, job matcher, privacy and skills tests on Node's built-in test runner (Node 22.6+, no extra dependencies).
+To teach the assistant something the page doesn't say, add a note. Notes are indexed and cited like any other fact; tags help it find a note by words the note doesn't use:
+
+```ts
+notes: [
+  {
+    id: "looking-for",
+    title: "What he's looking for",
+    text: "Backend or AI-infrastructure internships, remote or in Pune.",
+    tags: ["hiring", "role", "internship", "available", "opportunity"],
+  },
+],
+```
+
+**Theme.** The site's retro-office palette (paper, ink, amber, mint, rust) and the mono font are CSS variables at the top of `src/index.css`. The section styles, the assistant and the Lab all read them.
+
+**Link preview.** `npm run og` rebuilds `og/card.html` from `profile.ts` and renders `public/og-image.png` with a locally installed Chrome or Edge (set `BROWSER_PATH` if it isn't found). Run it after changing your name, headline or lead project's numbers.
+
+**Tests.** `npm test` runs the retrieval, job matcher, privacy, skills and Lab tests on Node's built-in test runner (Node 22.6+, no extra dependencies). The Lab tests check the backprop against numerical gradients, that the network learns two spirals, k-means recovery, overfitting at high polynomial degree, attention rows, and the chunker.
 
 ### Run and review locally
 
@@ -186,7 +210,7 @@ From a clean checkout (Node 22.6 or newer):
 
 ```bash
 npm install
-npm test           # assistant tests
+npm test           # assistant and Lab tests
 npm run dev        # http://localhost:5173/
 npm run build      # production build into dist/
 npm run preview    # serves dist/ at http://localhost:4173/
@@ -203,10 +227,16 @@ Review checklist (run it on `npm run dev` to see the FPS readout, then once more
 - [ ] *What has he built with React Native?* names Ordo.
 - [ ] *What is his phone number?* says it isn't shared and shows no number.
 - [ ] *Does he know Kubernetes?* or *What's his favourite film?* gets an honest "couldn't find that" instead of a guess.
-- [ ] **How this was found** under an answer lists the retrieved facts with scores.
+- [ ] Answers carry a VERIFIED stamp; the "couldn't find" answers carry NO RECORD.
+- [ ] **How this was found** under an answer lists query terms, each retrieved fact's score and signals, and marks facts as used or dropped.
+- [ ] While an answer is on its way the 3D character raises its eyebrows (visible when the character is on screen).
 - [ ] **Job match**: paste a real job description. Required and nice-to-have skills are separated, each one is labelled Shipped / Core / Listed / Transferable / Gap with evidence, and a years-of-experience note appears if the posting asks for years.
 - [ ] **Pitch me**: try Recruiter, Engineer, Founder and Just browsing. Each reads in about 30 seconds and its buttons work.
-- [ ] **Take the tour**: the camera and page move to each section. → and ← step through the stops, Esc ends the tour, and Next on the last stop finishes it.
+- [ ] **Tour**: the camera and page move to each section. → and ← step through the stops, Esc ends the tour, and Next on the last stop finishes it.
+- [ ] **Ctrl+K / ⌘K** opens the palette: typing filters commands, arrow keys and Enter run one, and typing a question then picking "Ask" answers it in the panel.
+- [ ] **Lab**: train the neural net on spirals until accuracy passes 95%; change chunk size and overlap in the RAG playground and watch the top match move; switch attention heads; step k-means to convergence; set regression to degree 11, press "Solve exactly", and see held-out error climb. Esc closes it. Keep an eye on the FPS readout while training.
+- [ ] On a phone-width window, the panel sits below the header, and the Lab and palette cover the page with no sideways scrolling.
+- [ ] After `npm run og`, `public/og-image.png` shows your current name, headline and numbers.
 - [ ] With reduced motion turned on in the OS, scrolling and tour stops land without easing.
 - [ ] **Agent** mode: *Which projects use Python and how can I contact him?* shows plan, act and observe steps.
 
