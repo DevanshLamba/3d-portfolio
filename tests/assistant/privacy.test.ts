@@ -80,6 +80,7 @@ function renderedSources(): string[] {
   walk(join(ROOT, "src/components"), [".tsx", ".ts"]);
   walk(join(ROOT, "src/data"), [".ts"]);
   walk(join(ROOT, "og"), [".html"]);
+  walk(join(ROOT, "resume"), [".html"]);
   walk(join(ROOT, "public"), [".html", ".txt", ".json", ".xml", ".svg", ".webmanifest"]);
   for (const f of ["index.html", "README.md", ".env.example", "api/contact.ts"]) files.push(join(ROOT, f));
   return files;
@@ -157,7 +158,8 @@ describe("résumé link", () => {
       }
     };
     walk(root);
-    assert.deepEqual(offenders, []);
+    // profile.ts is the one place it may live.
+    assert.deepEqual(offenders.filter((f) => f.split("\\").join("/") !== "data/profile.ts"), []);
   });
 
   test("stays hidden until a phone-free copy is provided at a real path", () => {

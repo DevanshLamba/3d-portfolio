@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test \"tests/**/*.test.ts\"",
     "og": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/og-card.ts",
-    "cover": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/project-cover.ts"
+    "cover": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/project-cover.ts",
+    "resume": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/resume.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",

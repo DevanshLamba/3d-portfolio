@@ -173,10 +173,9 @@ export const profile: ProfileData = {
   site: "https://devanshlamba.in/",
   // The one place every résumé link comes from: the corner button, the
   // assistant's contact answer, the recruiter pitch, the palette and the
-  // get_contact tool. Empty hides all of them. Keep it empty until a
-  // phone-free résumé exists, then save it as public/resume.pdf and set this
-  // to "/resume.pdf".
-  resume: "",
+  // get_contact tool. Empty hides all of them. public/resume.pdf is generated
+  // from this profile by `npm run resume` and has no phone number.
+  resume: "/resume.pdf",
 
   about:
     "I'm a backend engineer who builds systems that ship, not slideware. I designed and built Siliqo solo — a multi-tenant agentic customer support platform with 7,400+ lines of code, 38 API endpoints, and 68 passing tests, running RAG on PostgreSQL + pgvector behind a provider-agnostic LLM layer across OpenAI, Anthropic, and Google. Right now I'm building Vayris, an open-source local-first AI agent for Windows, and I founded Ordo, a hyperlocal quick-commerce platform, taking it from an idea to real APIs and a live mobile app. What I care about: architecture that holds up under real usage, automation that removes grunt work, and code that's still readable a year later. Outside engineering, I document the process — currently at 1K+ subscribers across platforms.",
