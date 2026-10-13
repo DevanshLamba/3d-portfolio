@@ -172,11 +172,43 @@ assistant.setProvider(createPresetProvider("groq", pastedKey));
 
 The panel in `src/components/Assistant/` is a thin, mostly unstyled mount: restyle `Assistant.css` or replace the component and keep the hooks. Tour stops call `navigateToSection()`, which scrolls through ScrollSmoother so the camera timelines follow, and jumps instead of animating under `prefers-reduced-motion`.
 
-**Privacy.** `contact.phone` and project demo credentials are never indexed, phone-like digit runs are redacted, and blank or placeholder links are skipped. API keys are pasted at runtime, held in memory only, and never stored. Don't hardcode a key anywhere in this repo; anything in frontend code is public.
+**Privacy.** `contact.phone` and project demo credentials are never indexed. Email addresses and phone-like digit runs are redacted from everything the assistant can show: indexed facts, answers, pitches, tour text and tool output. Blank or placeholder links are skipped. `tests/assistant/privacy.test.ts` fails if any of those values gets through. API keys are pasted at runtime, held in memory only, and never stored. Don't hardcode a key anywhere in this repo; anything in frontend code is public.
+
+> **Before deploying: swap the résumé.** `public/Devansh_Lamba_Resume.pdf` includes a phone number. Every résumé link (the corner button, the assistant's contact answer, the recruiter pitch and the `get_contact` tool) comes from the single `resume` value in `src/data/profile.ts`. Add a phone-number-free PDF to `public/` and point `resume` at it, or set `resume` to `""` to hide all résumé links.
 
 **Editing.** Add or change facts in `profile.ts` and the index, matcher, pitches and tour pick them up. Tour stops and per-audience pitch choices are under `profile.assistant`. The job matcher's skill vocabulary is in `src/assistant/skills/taxonomy.ts`.
 
 **Tests.** `npm test` runs the retrieval, job matcher, privacy and skills tests on Node's built-in test runner (Node 22.6+, no extra dependencies).
+
+### Run and review locally
+
+From a clean checkout (Node 22.6 or newer):
+
+```bash
+npm install
+npm test           # assistant tests
+npm run dev        # http://localhost:5173/
+npm run build      # production build into dist/
+npm run preview    # serves dist/ at http://localhost:4173/
+```
+
+`npm run dev` uses `--host`, so it also prints a network URL for testing on a phone. In dev only, a small readout under the logo shows frames per second and the slowest recent frame; production builds don't include it. Note that `npm run build` rewrites the tracked `tsconfig.*.tsbuildinfo` files.
+
+Review checklist (run it on `npm run dev` to see the FPS readout, then once more on `npm run preview`):
+
+- [ ] The **Ask about Devansh** button appears only after the intro finishes, and opening it doesn't visibly drop the FPS readout.
+- [ ] *Where did he study?* gives the degree, college and CGPA, with a numbered source.
+- [ ] *What is Siliqo?* answers with sources; clicking one scrolls to the Work section.
+- [ ] *How does Siliqo handle API keys?* quotes the two-key authentication detail with a citation.
+- [ ] *What has he built with React Native?* names Ordo.
+- [ ] *What is his phone number?* says it isn't shared and shows no number.
+- [ ] *Does he know Kubernetes?* or *What's his favourite film?* gets an honest "couldn't find that" instead of a guess.
+- [ ] **How this was found** under an answer lists the retrieved facts with scores.
+- [ ] **Job match**: paste a real job description. Required and nice-to-have skills are separated, each one is labelled Shipped / Core / Listed / Transferable / Gap with evidence, and a years-of-experience note appears if the posting asks for years.
+- [ ] **Pitch me**: try Recruiter, Engineer, Founder and Just browsing. Each reads in about 30 seconds and its buttons work.
+- [ ] **Take the tour**: the camera and page move to each section. → and ← step through the stops, Esc ends the tour, and Next on the last stop finishes it.
+- [ ] With reduced motion turned on in the OS, scrolling and tour stops land without easing.
+- [ ] **Agent** mode: *Which projects use Python and how can I contact him?* shows plan, act and observe steps.
 
 ## Troubleshooting
 
