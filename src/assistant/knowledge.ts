@@ -215,6 +215,17 @@ export function buildKnowledge(p: ProfileData): Chunk[] {
       });
     });
 
+    if (project.planned?.length) {
+      add({
+        id: `project:${project.id}:planned`,
+        sourceId: `project:${project.id}`,
+        section: "projects",
+        title: `${name}: planned, not shipped yet`,
+        text: `Planned for ${name} and not shipped yet: ${project.planned.join("; ")}.`,
+        tags: [...nameTags, "planned", "roadmap", "next", "future", "upcoming", "whatsapp", "voice"],
+      });
+    }
+
     if (project.limits) {
       add({
         id: `project:${project.id}:limits`,

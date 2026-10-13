@@ -41,6 +41,7 @@ export function publicProject(project: Project) {
     code: project.repo?.visibility ?? "unspecified",
     license: project.repo?.license,
     deployed: project.deployed ?? project.status !== "in-development",
+    planned: project.planned ?? [],
   };
 }
 

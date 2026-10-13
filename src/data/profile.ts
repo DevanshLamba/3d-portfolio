@@ -38,6 +38,8 @@ export interface Project {
   repo?: { visibility: "public" | "private"; license?: string };
   /** False for projects that have no public deployment yet. */
   deployed?: boolean;
+  /** Planned and not shipped. Always presented as planned, never as done. */
+  planned?: string[];
 }
 
 export interface CareerEntry {
@@ -242,6 +244,15 @@ export const profile: ProfileData = {
       projectId: "ordo",
     },
     {
+      id: "leadloop",
+      title: "LeadLoop",
+      role: "Founder & Developer",
+      when: "Building",
+      description:
+        "Building an outsourced digital department for restaurants, run from one dashboard: bookings, orders, payments, marketing and daily revenue on a multi-tenant Next.js and Supabase platform with plan-based feature locking.",
+      projectId: "leadloop",
+    },
+    {
       id: "problem-solving",
       title: "Problem Solving",
       role: "DSA & Logic",
@@ -313,6 +324,33 @@ export const profile: ProfileData = {
         "Founded Ordo, a hyperlocal quick-commerce startup connecting local retailers, customers, and delivery partners, launching in Pune, and leads its architecture and full-stack development.",
         "Building secure REST APIs for authentication, order management, and inventory operations, validated with Postman.",
         "Building backend workflows for order processing and delivery tracking, and a React Native app with real-time order status updates.",
+      ],
+    },
+    {
+      id: "leadloop",
+      title: "LeadLoop",
+      category: "Outsourced Digital Department for Restaurants",
+      stack: ["Next.js", "Docker", "Supabase (PostgreSQL)", "Monorepo", "Multi-tenant", "LLM integration"],
+      image: "/images/leadloop-cover.png",
+      alt: "LeadLoop cover: an outsourced digital department for restaurants, run from one dashboard, with bookings, orders, payments, marketing and revenue.",
+      link: "",
+      status: "in-development",
+      role: "Founder & developer",
+      repo: { visibility: "private" },
+      deployed: false,
+      summary:
+        "An outsourced digital department for restaurants, run from one dashboard: table bookings, food orders, payments, marketing and daily revenue, with customer offers and monthly analysis.",
+      highlights: [
+        "Handles a restaurant's table bookings, food orders, payments, marketing and daily revenue from a single dashboard, with customer offers and monthly analysis; it deliberately leaves out inventory and staff management.",
+        "Multi-tenant by design: every restaurant runs on one shared template, and features unlock according to its subscription tier.",
+        "Monorepo with a Next.js dashboard and a separate Dockerised core service, on Supabase (PostgreSQL).",
+        "Cost-aware: whatever plain code can do is done by code, and the cheapest suitable LLM is used only where it is needed, which keeps running costs low.",
+        "Foundation built and tagged, with docs written at every build phase so anyone can join and contribute.",
+      ],
+      planned: [
+        "A WhatsApp ordering agent",
+        "Voice and AI-call ordering in higher tiers",
+        "Online restaurant billing as the entry product",
       ],
     },
     {
@@ -515,13 +553,13 @@ export const profile: ProfileData = {
       },
       founder: {
         label: "Founder",
-        projectIds: ["ordo", "siliqo"],
+        projectIds: ["ordo", "leadloop", "siliqo"],
         skillGroupIds: [],
         actions: ["respond", "linkedin", "project:ordo"],
       },
       browsing: {
         label: "Just browsing",
-        projectIds: ["siliqo", "vayris", "ordo", "cloudtasks"],
+        projectIds: ["siliqo", "vayris", "ordo", "leadloop", "cloudtasks"],
         skillGroupIds: [],
         actions: ["tour", "work", "respond"],
       },

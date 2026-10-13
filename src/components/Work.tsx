@@ -2,7 +2,7 @@ import { useState, useCallback, useLayoutEffect, useRef } from "react";
 import "./styles/Work.css";
 import WorkImage from "./WorkImage";
 import { MdArrowBack, MdArrowForward, MdArrowOutward } from "react-icons/md";
-import { DEMO_PASSWORD_PLACEHOLDER, profile } from "../data/profile";
+import { DEMO_PASSWORD_PLACEHOLDER, isPlaceholder, profile } from "../data/profile";
 
 const projects = profile.projects;
 
@@ -160,7 +160,7 @@ const Work = () => {
                       <WorkImage
                         image={project.image}
                         alt={project.alt ?? project.title}
-                        link={project.link}
+                        link={isPlaceholder(project.link) ? undefined : project.link}
                       />
                     </div>
                   </div>

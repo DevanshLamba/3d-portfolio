@@ -28,7 +28,7 @@ describe("tools", () => {
 
   test("list_projects filters by technology", () => {
     const out = core.runTool("list_projects", { technology: "Docker" }) as { projects: { title: string }[] };
-    assert.deepEqual(out.projects.map((p) => p.title), ["CloudTasks"]);
+    assert.deepEqual(out.projects.map((p) => p.title), ["LeadLoop", "CloudTasks"]);
   });
 
   test("get_project never exposes demo credentials", () => {

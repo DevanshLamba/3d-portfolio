@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test \"tests/**/*.test.ts\"",
-    "og": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/og-card.ts"
+    "og": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/og-card.ts",
+    "cover": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/project-cover.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.1",

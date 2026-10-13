@@ -69,6 +69,16 @@ describe("assistant: project facts", () => {
     assert.doesNotMatch(r.answer, /github\.com\/[^ ]*siliqo/i);
   });
 
+  test("LeadLoop: what it is, that it isn't live, and planned work stays planned", () => {
+    const what = core.ask("What is LeadLoop?");
+    assert.equal(what.grounded, true);
+    assert.match(what.answer, /Outsourced Digital Department for Restaurants|digital department for restaurants/i);
+    assert.match(core.ask("Is LeadLoop live?").answer, /LeadLoop is not live yet/);
+    const planned = core.ask("Does LeadLoop have WhatsApp ordering?").answer;
+    assert.match(planned, /Planned for LeadLoop and not shipped yet/);
+    assert.match(core.ask("Can I see the LeadLoop code?").answer, /source code is private/);
+  });
+
   test("what he's looking for and where", () => {
     assert.match(core.ask("What kind of role is he looking for?").answer, /job or an internship/);
     const where = core.ask("Is he open to remote or Bangalore?").answer;
