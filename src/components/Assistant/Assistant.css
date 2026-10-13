@@ -107,6 +107,8 @@
   width: min(420px, calc(100vw - 32px));
   /* Leaves room above for the site header and the folder tab. */
   max-height: min(calc(100vh - 230px), 640px);
+  /* dvh follows the visible area when phone toolbars show or hide. */
+  max-height: min(calc(100dvh - 230px), 640px);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -496,6 +498,8 @@
 .palette-backdrop {
   position: fixed;
   inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   /* Modal: above the site header (9999) and the page's scanline layer. */
   z-index: 10001;
   background: rgba(46, 42, 36, 0.35);
@@ -602,12 +606,18 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+/* Phones: the RESUME link runs up the right edge, so the assistant docks
+   bottom-left, where nothing else sits at this size. */
+@media only screen and (max-width: 767px) {
   .assistant-root {
-    right: 10px;
-    bottom: 80px;
+    right: auto;
+    left: 12px;
+    bottom: 16px;
+    align-items: flex-start;
   }
   .assistant-panel {
-    max-height: calc(100vh - 280px);
+    width: calc(100vw - 44px);
+    max-height: calc(100vh - 210px);
+    max-height: calc(100dvh - 210px);
   }
 }
