@@ -15,6 +15,7 @@ Live site: [https://akashrmalhotra.netlify.app/](https://akashrmalhotra.netlify.
 - [Available Scripts](#available-scripts)
 - [GSAP License Note](#gsap-license-note)
 - [Customization Guide](#customization-guide)
+- [Portfolio Assistant](#portfolio-assistant)
 - [Troubleshooting](#troubleshooting)
 - [Deployment](#deployment)
 - [License](#license)
@@ -122,6 +123,9 @@ Live site: [https://akashrmalhotra.netlify.app/](https://akashrmalhotra.netlify.
 - `npm run lint`  
   Runs ESLint checks across the project.
 
+- `npm test`  
+  Runs the assistant's tests with Node's built-in test runner.
+
 ## GSAP License Note
 
 This project uses the standard `gsap` package, including bonus plugins now available in the core package.
@@ -135,11 +139,44 @@ Read official installation guidance here: [GSAP Installation Docs](https://gsap.
 
 You can adapt this portfolio to your own profile by updating the following areas:
 
-- **Content sections**: Edit files in `src/components/` such as `About.tsx`, `Career.tsx`, `WhatIDo.tsx`, and `Work.tsx`.
-- **Data source**: Update static values in files under `src/data/`.
+- **Content**: Every fact on the page (about, services, career, projects, contact, plus résumé-only details like education and certifications) lives in `src/data/profile.ts`. The section components and the assistant both read from it, so edit it there only.
+- **Section layout**: Edit files in `src/components/` such as `About.tsx`, `Career.tsx`, `WhatIDo.tsx`, and `Work.tsx`.
 - **Styling**: Modify component styles in `src/components/styles/` and global styles in `src/index.css` / `src/App.css`.
 - **3D scene behavior**: Adjust scene logic in `src/components/Character/` and related utilities.
 - **Animations**: Tweak GSAP utilities under `src/components/utils/`.
+
+## Portfolio Assistant
+
+An in-browser assistant that answers questions about the portfolio with no API key and no network calls. Everything lives in `src/assistant/` and reads only from `src/data/profile.ts`.
+
+- **Retrieval**: the profile is split into small tagged facts, indexed with TF-IDF and searched by cosine similarity, then reranked on exact-term coverage, tag hits, phrase adjacency and title hits.
+- **Answers**: composed only from retrieved facts, with `[n]` citations. If nothing relevant is found, the assistant says so.
+- **Skills**: a job matcher (Shipped / Core / Listed / Transferable / Gap, with evidence), audience pitches, and a guided tour.
+- **Tools**: a registry with JSON schemas and a plan, act, observe loop that reports each step.
+- **Performance**: the engine runs in a Web Worker that starts on first use. The panel loads after the intro finishes.
+
+```ts
+import { getAssistant, createPresetProvider } from "./assistant";
+
+const assistant = getAssistant();
+await assistant.ask("What is Siliqo?");     // { answer, citations, retrieved, grounded, ... }
+await assistant.matchJob(jobDescription);   // { score, verdict, rows, notes }
+assistant.pitch("recruiter");               // recruiter | engineer | founder | browsing
+assistant.tour.start();                     // emits start / stop / end
+assistant.tour.on("stop", ({ stop }) => console.log(stop.targetId));
+window.addEventListener("portfolio:tour", (e) => console.log(e.detail));
+
+// Optional: only the wording step goes to the provider; retrieval stays local.
+assistant.setProvider(createPresetProvider("groq", pastedKey));
+```
+
+The panel in `src/components/Assistant/` is a thin, mostly unstyled mount: restyle `Assistant.css` or replace the component and keep the hooks. Tour stops call `navigateToSection()`, which scrolls through ScrollSmoother so the camera timelines follow, and jumps instead of animating under `prefers-reduced-motion`.
+
+**Privacy.** `contact.phone` and project demo credentials are never indexed, phone-like digit runs are redacted, and blank or placeholder links are skipped. API keys are pasted at runtime, held in memory only, and never stored. Don't hardcode a key anywhere in this repo; anything in frontend code is public.
+
+**Editing.** Add or change facts in `profile.ts` and the index, matcher, pitches and tour pick them up. Tour stops and per-audience pitch choices are under `profile.assistant`. The job matcher's skill vocabulary is in `src/assistant/skills/taxonomy.ts`.
+
+**Tests.** `npm test` runs the retrieval, job matcher, privacy and skills tests on Node's built-in test runner (Node 22.6+, no extra dependencies).
 
 ## Troubleshooting
 
