@@ -179,7 +179,7 @@ export const profile: ProfileData = {
   resume: "/assets/Devansh_Lamba_Resume.pdf",
 
   about:
-    "I'm a backend engineer who builds systems that ship, not slideware. I designed and built Siliqo solo — a multi-tenant agentic customer support platform with 7,400+ lines of code, 38 API endpoints, and 68 passing tests, running RAG on PostgreSQL + pgvector behind a provider-agnostic LLM layer across OpenAI, Anthropic, and Google. Right now I'm building Vayris, an open-source local-first AI agent for Windows, and I founded Ordo, a hyperlocal quick-commerce platform, taking it from an idea to real APIs and a live mobile app. What I care about: architecture that holds up under real usage, automation that removes grunt work, and code that's still readable a year later. Outside engineering, I document the process — currently at 1K+ subscribers across platforms.",
+    "I build backend systems that ship, not slideware. Solo, I designed and built Siliqo: a multi-tenant agentic customer-support API with 7,400+ lines of code, 38 endpoints and 68 passing tests, running RAG on PostgreSQL + pgvector behind one provider-agnostic LLM layer across OpenAI, Anthropic and Google. I'm building Vayris, an open-source (Apache 2.0) local-first AI agent for Windows, and I'm the founder-developer of two startups in development: Ordo, hyperlocal quick commerce, and LeadLoop, a digital department for restaurants. I design for real usage: secure multi-tenancy, plain code before LLM calls, and code that's still readable a year later. Outside engineering, I document the process for 1K+ subscribers across platforms.",
 
   services: [
     {
