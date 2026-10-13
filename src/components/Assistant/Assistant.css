@@ -103,6 +103,7 @@
 /* ── Panel: a case file with a folder tab ────────────────── */
 .assistant-panel {
   position: relative;
+  box-sizing: border-box;
   width: min(420px, calc(100vw - 32px));
   /* Leaves room above for the site header and the folder tab. */
   max-height: min(calc(100vh - 230px), 640px);
@@ -495,7 +496,8 @@
 .palette-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1200;
+  /* Modal: above the site header (9999) and the page's scanline layer. */
+  z-index: 10001;
   background: rgba(46, 42, 36, 0.35);
   display: flex;
   justify-content: center;
@@ -585,7 +587,7 @@
 .lab-loading {
   position: fixed;
   inset: 0;
-  z-index: 1100;
+  z-index: 10001;
   display: grid;
   place-items: center;
   font: 14px var(--font-mono);
@@ -606,6 +608,6 @@
     bottom: 80px;
   }
   .assistant-panel {
-    max-height: calc(100vh - 200px);
+    max-height: calc(100vh - 280px);
   }
 }

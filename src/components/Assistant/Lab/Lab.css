@@ -3,7 +3,8 @@
 .lab-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1100;
+  /* Modal: above the site header (9999) and the page's scanline layer. */
+  z-index: 10001;
   background: rgba(46, 42, 36, 0.45);
   display: flex;
   align-items: center;
@@ -375,6 +376,17 @@
   .lab {
     padding: 10px;
     border-radius: 12px;
+  }
+  .lab-badge {
+    display: none;
+  }
+  .lab-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .lab-tabs button {
+    white-space: nowrap;
   }
   .lab-heatmap {
     font-size: 10px;

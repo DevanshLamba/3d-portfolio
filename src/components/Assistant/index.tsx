@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useId, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import type { PitchAction } from "../../assistant";
 import { isPlaceholder, profile } from "../../data/profile";
 import CommandPalette, { type Command } from "./CommandPalette";
@@ -137,13 +138,17 @@ const Assistant = () => {
         </button>
       </div>
 
-      {paletteOpen && <CommandPalette commands={commands} onAsk={ask} onClose={() => setPaletteOpen(false)} />}
+      {/* Modals render on <body>: the fixed root is its own stacking context,
+          which would otherwise keep them under the site header. */}
+      {paletteOpen && createPortal(<CommandPalette commands={commands} onAsk={ask} onClose={() => setPaletteOpen(false)} />, document.body)}
 
-      {labTab && (
-        <Suspense fallback={<div className="lab-loading">Warming up the lab…</div>}>
-          <Lab tab={labTab} onTabChange={setLabTab} onClose={() => setLabTab(null)} />
-        </Suspense>
-      )}
+      {labTab &&
+        createPortal(
+          <Suspense fallback={<div className="lab-loading">Warming up the lab…</div>}>
+            <Lab tab={labTab} onTabChange={setLabTab} onClose={() => setLabTab(null)} />
+          </Suspense>,
+          document.body
+        )}
     </div>
   );
 };
