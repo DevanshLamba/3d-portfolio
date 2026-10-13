@@ -259,6 +259,22 @@ export function buildKnowledge(p: ProfileData): Chunk[] {
     });
   }
 
+  for (const note of p.notes) {
+    if (isPlaceholder(note.text) || isPlaceholder(note.title)) continue;
+    groupSentences(note.text, 3).forEach((text, i) => {
+      add({
+        id: `note:${note.id}:${i}`,
+        sourceId: `note:${note.id}`,
+        section: "notes",
+        title: note.title,
+        text,
+        tags: ["notes", ...note.tags],
+        // Written specifically to answer questions.
+        weight: 1.1,
+      });
+    });
+  }
+
   const primary = usableLink(p.contact.connect.href);
   const socials = p.contact.socials
     .map((s) => ({ ...s, href: usableLink(s.href) }))

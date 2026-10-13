@@ -82,6 +82,18 @@ export interface Achievement {
   detail: string;
 }
 
+/**
+ * Free-form facts written to answer visitors' questions: what you're looking
+ * for, availability, how you like to work. Indexed by the assistant; blank
+ * entries are skipped. Tags help retrieval find a note by words it doesn't use.
+ */
+export interface Note {
+  id: string;
+  title: string;
+  text: string;
+  tags: string[];
+}
+
 export type Audience = "recruiter" | "engineer" | "founder" | "browsing";
 
 export interface PitchConfig {
@@ -115,6 +127,7 @@ export interface ProfileData {
   education: Education[];
   certifications: Certification[];
   achievements: Achievement[];
+  notes: Note[];
   contact: {
     phone: { display: string; href: string; private: true };
     connect: LinkItem;
@@ -428,6 +441,10 @@ export const profile: ProfileData = {
         "Founded and leads development of Ordo, a hyperlocal quick-commerce startup connecting local retailers, customers, and delivery partners.",
     },
   ],
+
+  // Add notes here to teach the assistant things the page doesn't say, e.g.
+  // { id: "looking-for", title: "What he's looking for", text: "…", tags: ["hiring", "role", "internship"] }
+  notes: [],
 
   contact: {
     // Rendered in the Contact section only. `private` keeps it out of the

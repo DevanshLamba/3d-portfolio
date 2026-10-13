@@ -11,7 +11,8 @@ export type Section =
   | "education"
   | "certifications"
   | "achievements"
-  | "contact";
+  | "contact"
+  | "notes";
 
 /** One small, self-contained fact the retriever can return and cite. */
 export interface Chunk {

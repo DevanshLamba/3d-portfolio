@@ -31,3 +31,18 @@ describe("knowledge base hygiene", () => {
     assert.ok(!text.includes("résumé"));
   });
 });
+
+describe("notes", () => {
+  test("notes are indexed, retrievable and cited; blank ones are skipped", async () => {
+    const { createAssistantCore } = await import("../../src/assistant/core.ts");
+    const p: ProfileData = structuredClone(profile);
+    p.notes = [
+      { id: "looking-for", title: "What he's looking for", text: "He is looking for backend internships focused on distributed systems.", tags: ["hiring", "role", "opportunity"] },
+      { id: "empty", title: "Draft", text: "", tags: [] },
+    ];
+    assert.ok(buildKnowledge(p).some((c) => c.id === "note:looking-for:0"));
+    assert.ok(!buildKnowledge(p).some((c) => c.sourceId === "note:empty"));
+    const result = createAssistantCore(p).ask("What kind of role is he looking for?");
+    assert.equal(result.citations[0]?.sourceId, "note:looking-for");
+  });
+});
