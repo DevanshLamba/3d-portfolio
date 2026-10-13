@@ -3,7 +3,7 @@
 // projects, skill groups and actions each audience sees.
 
 import type { Audience, PitchConfig, ProfileData } from "../../data/profile.ts";
-import { usableLink } from "../knowledge.ts";
+import { redactSensitive, usableLink } from "../knowledge.ts";
 import { splitSentences } from "../text.ts";
 
 export interface PitchAction {
@@ -124,5 +124,5 @@ export function buildPitch(p: ProfileData, audience: Audience): Pitch {
     .map((a) => resolveAction(p, a))
     .filter((a): a is PitchAction => a !== null);
 
-  return { audience, label: config.label, text, points, actions };
+  return { audience, label: config.label, text: redactSensitive(text), points: points.map(redactSensitive), actions };
 }

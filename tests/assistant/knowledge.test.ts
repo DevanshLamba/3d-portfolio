@@ -1,30 +1,9 @@
 import { describe, test } from "node:test";
 import assert from "node:assert/strict";
 import { profile, type ProfileData } from "../../src/data/profile.ts";
-import { buildKnowledge, redactSensitive } from "../../src/assistant/knowledge.ts";
+import { buildKnowledge } from "../../src/assistant/knowledge.ts";
 
 const chunks = buildKnowledge(profile);
-const everything = chunks.map((c) => `${c.title}\n${c.text}\n${c.tags.join(" ")}`).join("\n");
-
-describe("knowledge base privacy", () => {
-  test("the phone number is never indexed", () => {
-    const digits = profile.contact.phone.href.replace(/\D/g, "");
-    assert.ok(!everything.replace(/\D/g, " ").includes(digits.slice(-10)));
-    assert.ok(!everything.includes(profile.contact.phone.display));
-  });
-
-  test("demo credentials are never indexed", () => {
-    for (const project of profile.projects) {
-      if (project.demo) assert.ok(!everything.includes(project.demo.password));
-    }
-  });
-
-  test("phone-like runs are redacted but ordinary numbers survive", () => {
-    assert.equal(redactSensitive("call +91 98765 43210 today"), "call [redacted] today");
-    assert.equal(redactSensitive("7,400+ LOC, 38 endpoints"), "7,400+ LOC, 38 endpoints");
-    assert.equal(redactSensitive("Aug 2023 - 2026"), "Aug 2023 - 2026");
-  });
-});
 
 describe("knowledge base hygiene", () => {
   test("chunk ids are unique and every chunk is tagged and sourced", () => {

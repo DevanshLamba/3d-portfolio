@@ -9,7 +9,7 @@ import "./styles/SocialIcons.css";
 import { TbNotes } from "react-icons/tb";
 import { useEffect } from "react";
 import HoverLinks from "./HoverLinks";
-import { profile, type SocialLink } from "../data/profile";
+import { isPlaceholder, profile, type SocialLink } from "../data/profile";
 import type { IconType } from "react-icons";
 
 const socialIcons: Record<SocialLink["id"], IconType> = {
@@ -81,17 +81,19 @@ const SocialIcons = () => {
           );
         })}
       </div>
-      <a
-        className="resume-button"
-        href={profile.resume}
-        target="_blank"
-        rel="noreferrer"
-      >
-        <HoverLinks text="RESUME" />
-        <span>
-          <TbNotes />
-        </span>
-      </a>
+      {!isPlaceholder(profile.resume) && (
+        <a
+          className="resume-button"
+          href={profile.resume}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <HoverLinks text="RESUME" />
+          <span>
+            <TbNotes />
+          </span>
+        </a>
+      )}
     </div>
   );
 };

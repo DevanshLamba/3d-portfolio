@@ -149,6 +149,10 @@ export const profile: ProfileData = {
   headline: "Backend Systems & Automation",
   location: "Pune, Maharashtra, India",
   site: "https://devanshlamba.in/",
+  // The one place the résumé is linked from: the corner button, the
+  // assistant's contact answer, the recruiter pitch and the get_contact tool.
+  // The current PDF includes a phone number; before deploying, point this at a
+  // phone-free copy in public/, or set it to "" to hide every résumé link.
   resume: "/Devansh_Lamba_Resume.pdf",
 
   about:

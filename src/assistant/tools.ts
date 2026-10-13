@@ -3,7 +3,7 @@
 // later. Tools only return public profile data.
 
 import type { ProfileData, Project } from "../data/profile.ts";
-import { usableLink } from "./knowledge.ts";
+import { redactDeep, usableLink } from "./knowledge.ts";
 import type { TfIdfIndex } from "./retrieval.ts";
 import type { JobMatcher } from "./skills/jobMatcher.ts";
 import { COMPILED_SKILLS, matchesAny } from "./skills/taxonomy.ts";
@@ -202,5 +202,7 @@ export function runTool(name: string, args: Record<string, unknown>, ctx: ToolCo
   if (!tool) throw new Error(`Unknown tool "${name}".`);
   const problem = validateArgs(tool.parameters, args);
   if (problem) throw new Error(problem);
-  return tool.run(args, ctx);
+  // Tools read the profile directly, so their output gets the same redaction
+  // as the indexed facts.
+  return redactDeep(tool.run(args, ctx));
 }

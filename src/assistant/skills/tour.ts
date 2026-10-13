@@ -3,7 +3,7 @@
 // integration listens for "stop" events and moves the camera/scroll.
 
 import type { ProfileData, TourStopConfig } from "../../data/profile.ts";
-import { usableLink } from "../knowledge.ts";
+import { redactSensitive, usableLink } from "../knowledge.ts";
 import { splitSentences } from "../text.ts";
 
 export interface TourStop {
@@ -64,7 +64,7 @@ export function buildTourStops(p: ProfileData): TourStop[] {
     id: stop.id,
     targetId: stop.targetId,
     title: stop.title,
-    narration: narrate(p, stop),
+    narration: redactSensitive(narrate(p, stop)),
   }));
 }
 

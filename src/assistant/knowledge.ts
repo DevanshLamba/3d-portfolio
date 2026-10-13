@@ -19,12 +19,26 @@ export const SECTION_ANCHORS: Partial<Record<Section, string>> = {
 };
 
 const PHONE_LIKE = /\+?\d[\d\s().-]{7,}\d/g;
+const EMAIL_LIKE = /[\w.+-]+@[\w-]+(\.[\w-]+)+/g;
 
-/** Defence in depth: strips anything with ten or more digits in a phone-ish run. */
+/**
+ * Defence in depth: strips email addresses and anything with ten or more
+ * digits in a phone-ish run, in case one slips into the profile's prose.
+ */
 export function redactSensitive(text: string): string {
-  return text.replace(PHONE_LIKE, (match) =>
-    match.replace(/\D/g, "").length >= 10 ? "[redacted]" : match
-  );
+  return text
+    .replace(EMAIL_LIKE, "[redacted]")
+    .replace(PHONE_LIKE, (match) => (match.replace(/\D/g, "").length >= 10 ? "[redacted]" : match));
+}
+
+/** redactSensitive applied to every string inside a JSON-like value. */
+export function redactDeep<T>(value: T): T {
+  if (typeof value === "string") return redactSensitive(value) as T;
+  if (Array.isArray(value)) return value.map(redactDeep) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, redactDeep(v)])) as T;
+  }
+  return value;
 }
 
 export function usableLink(href: string | undefined): string | undefined {
