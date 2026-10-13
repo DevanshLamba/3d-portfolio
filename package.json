@@ -12,6 +12,7 @@
     "og": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/og-card.ts",
     "cover": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/project-cover.ts",
     "resume": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/resume.ts",
+    "resume:one-page": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/resume-one-page.ts",
     "build:api": "node --experimental-strip-types --disable-warning=ExperimentalWarning scripts/build-api.ts"
   },
   "dependencies": {

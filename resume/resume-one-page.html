@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Devansh Lamba · Résumé</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  @page { size: A4; margin: 13mm 14mm 13mm 14mm; }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; font: 10pt/1.45 "Geist", system-ui, sans-serif; color: #2e2a24; }
+  a { color: inherit; text-decoration: none; border-bottom: 1px solid #e0b98a; }
+  .mono, .label, .meta, .stack, .links, .contact, .numbers span { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+
+  .top { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2.5px solid #2e2a24; padding-bottom: 8px; }
+  h1 { margin: 0; font-size: 27pt; line-height: 1; letter-spacing: -0.5px; }
+  .title { margin: 5px 0 0; font: 600 11pt "IBM Plex Mono", monospace; color: #c46a1f; letter-spacing: 0.3px; }
+  .stamp { font: 700 8pt "IBM Plex Mono", monospace; letter-spacing: 1.5px; text-transform: uppercase; color: #b24a35; border: 2px solid #b24a35; border-radius: 4px; padding: 4px 8px; transform: rotate(-4deg); white-space: nowrap; }
+  .contact { margin: 7px 0 0; font-size: 8.4pt; color: #4e453a; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+
+  .summary { margin: 10px 0 8px; font-size: 10pt; }
+  .numbers { display: grid; grid-template-columns: repeat(0, 1fr); gap: 6px; margin: 0 0 4px; }
+  .numbers div { border: 1.3px solid #2e2a24; border-radius: 4px; padding: 5px 7px; background: #fbf5ea; }
+  .numbers b { display: block; font-size: 13.5pt; line-height: 1.1; }
+  .numbers span { font-size: 6.8pt; text-transform: uppercase; letter-spacing: 0.4px; color: #6e6253; }
+
+  h2 { margin: 12px 0 5px; font: 600 8.6pt "IBM Plex Mono", monospace; letter-spacing: 2px; text-transform: uppercase; color: #6e6253; display: flex; align-items: center; gap: 8px; }
+  h2::after { content: ""; flex: 1; border-top: 1px solid #d8c7a6; }
+
+  .project { break-inside: avoid; margin: 0 0 8px; padding-left: 9px; border-left: 2.5px solid #e8a066; }
+  .project header { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .project h3 { margin: 0; font-size: 11pt; }
+  .project .cat { font-weight: 500; color: #4e453a; font-size: 9.5pt; }
+  .meta { margin: 1px 0 0; font-size: 7.8pt; color: #6e6253; }
+  .tag { color: #2f6e5c; font-weight: 600; }
+  .links { margin: 0; font-size: 7.6pt; text-align: right; white-space: nowrap; color: #4e453a; }
+  .stack { margin: 2px 0 2px; font-size: 7.8pt; color: #c46a1f; }
+  .project ul { margin: 2px 0 0; padding-left: 15px; }
+  .project li { margin: 0 0 1.5px; font-size: 9.2pt; }
+  .planned { margin: 3px 0 0; font-size: 8.6pt; color: #6e6253; }
+
+  .grid2 { display: grid; grid-template-columns: 1.35fr 1fr; gap: 0 22px; }
+  .skills p { margin: 0 0 3px; font-size: 9pt; }
+  .skills b { font: 600 7.8pt "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: 0.5px; color: #6e6253; margin-right: 4px; }
+  .plain { margin: 0 0 3px; font-size: 9pt; }
+  .plain small { color: #6e6253; font-family: "IBM Plex Mono", monospace; font-size: 7.8pt; }
+  ul.plain-list { margin: 0; padding-left: 15px; font-size: 9pt; }
+
+  /* One page: the same theme, with the summary, skills, education and
+     certifications laid out as compact rows. */
+  .summary { margin: 9px 0 2px; }
+  .summary span { display: block; }
+  .startups-note { margin: 0 0 5px; font: 500 7.8pt "IBM Plex Mono", monospace; color: #6e6253; }
+  .oneline { break-inside: avoid; margin: 0 0 6px; padding-left: 9px; border-left: 2.5px solid #e8a066; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .oneline p { margin: 0; font-size: 9.2pt; }
+  .oneline .tag { font-size: 7.8pt; }
+  .oneline b { font-size: 10pt; }
+  .skills-rows p { margin: 0 0 2px; font-size: 9pt; }
+  .skills-rows b { font: 600 7.8pt "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: 0.5px; color: #6e6253; margin-right: 6px; }
+  .skills-rows small { color: #6e6253; font-size: 7.8pt; }
+</style>
+</head>
+<body>
+  <section class="top">
+    <div>
+      <h1>Devansh Lamba</h1>
+      <p class="title">AI · Backend · Automation Engineer</p>
+      <p class="contact">
+        <span>Pune, India · open to Pune, Bangalore or remote</span>
+        <a href="mailto:devansh@devanshlamba.in">devansh@devanshlamba.in</a>
+        <a href="https://www.linkedin.com/in/devanshlamba/">linkedin.com/in/devanshlamba</a>
+        <a href="https://github.com/devanshlamba">github.com/devanshlamba</a>
+        <a href="https://devanshlamba.in/">devanshlamba.in</a>
+      </p>
+    </div>
+    <span class="stamp">Open to work</span>
+  </section>
+
+  <p class="summary">
+    <span>Backend engineer shipping multi-tenant APIs, RAG pipelines, agentic tool-calling and LLM integrations.</span>
+    <span>Seeking full-time or internship roles in AI / backend engineering.</span>
+  </p>
+
+  <h2>Selected work</h2>
+  
+  <article class="project">
+    <header>
+      <div>
+        <h3>Siliqo <span class="cat">Agentic Customer Support API Platform</span></h3>
+        <p class="meta">Solo builder · Sep 2026 - Present · <span class="tag">Live</span></p>
+      </div>
+      <p class="links"><a href="https://siliqo-beta.vercel.app/">Live site</a> · <span>Code private · walkthrough on request</span></p>
+    </header>
+    <p class="stack">Python · PostgreSQL + pgvector · RAG · Multi-tenant SaaS</p>
+    <ul><li>Architected a multi-tenant backend (7,400+ LOC, 38 endpoints, 68 passing tests) for an embeddable, zero-build JavaScript support widget with RAG, agentic tool-calling and human escalation, streaming over REST and SSE.</li><li>Built a provider-agnostic LLM layer unifying OpenAI, Anthropic and Google behind one streaming interface.</li><li>Designed Stripe/Razorpay-style two-key API auth (domain-locked public + secret key) with AES-256-GCM encryption.</li><li>Built RAG on PostgreSQL + pgvector (HNSW) and tool-calling via HMAC-signed webhooks with SSRF protection.</li></ul>
+  </article>
+  
+  <article class="project">
+    <header>
+      <div>
+        <h3>Vayris <span class="cat">Open-Source AI Agent for Windows</span></h3>
+        <p class="meta">Independent builder · Aug 2026 - Present · <span class="tag">Open source · Apache 2.0</span></p>
+      </div>
+      <p class="links"><a href="https://github.com/DevanshLamba/vayris-ai">GitHub</a> · <a href="https://vayris-website.vercel.app/">Website</a></p>
+    </header>
+    <p class="stack">Electron · React · TypeScript · Agentic Routing · MCP</p>
+    <ul><li>Designed tri-path routing (deterministic, fast-LLM, deep agentic) sharing one unified tool registry, with MCP support.</li><li>Integrated RAG to ground responses in local context, with guardrails against unsafe or irreversible actions.</li><li>Runs on a user-supplied API key or a fully local model; a monorepo with Electron desktop and React web clients.</li></ul>
+  </article>
+
+  <h2>Startups</h2>
+  
+  <article class="project">
+    <header>
+      <div>
+        <h3>Ordo <span class="cat">Hyperlocal Quick-Commerce Platform</span></h3>
+        <p class="meta">Founder &amp; developer · Jan 2025 - Present · <span class="tag">In development</span></p>
+      </div>
+      <p class="links"><a href="https://ordo-website-two.vercel.app/">Landing site</a></p>
+    </header>
+    <p class="stack">Node.js · React Native · MongoDB · REST APIs</p>
+    <ul><li>Founded it to connect local retailers, customers and delivery partners; leads architecture and full-stack work.</li><li>Building secure REST APIs (auth, orders, inventory) and a React Native app with real-time order tracking.</li></ul>
+  </article>
+  
+  <article class="project">
+    <header>
+      <div>
+        <h3>LeadLoop <span class="cat">Outsourced Digital Department for Restaurants</span></h3>
+        <p class="meta">Founder &amp; developer · <span class="tag">In development</span></p>
+      </div>
+      <p class="links"><span>Code private · walkthrough on request</span></p>
+    </header>
+    <p class="stack">Next.js · Docker · Supabase (PostgreSQL) · Monorepo · Multi-tenant · LLM integration</p>
+    <ul><li>Handles a restaurant's bookings, orders, payments, marketing and revenue from one dashboard, with monthly analysis.</li><li>Multi-tenant, tier-locked template; a monorepo with a Next.js dashboard and a Dockerised core service.</li></ul>
+  </article>
+
+  <h2>Also built</h2>
+  <div class="oneline">
+    <p><b>CloudTasks</b> <span class="tag mono">Learning build</span> · Task tracker on an Azure Linux VM with 41 automated tests.</p>
+    <p class="links"><a href="https://tasks.devanshlamba.in">Live demo</a> · <a href="https://github.com/devanshlamba/azure-vm-deploy">GitHub</a></p>
+  </div>
+
+  <h2>Technical skills</h2>
+  <div class="skills-rows">
+    <p><b>Languages</b>Java, JavaScript, Python, SQL</p>
+    <p><b>Backend &amp; APIs</b>Spring Boot, Node.js, Express.js, REST API Design, SSE</p>
+    <p><b>AI / ML</b>LLM APIs (OpenAI, Anthropic, Google), RAG, Multi-Agent Systems, Prompt Engineering</p>
+    <p><b>Databases &amp; Frontend</b>PostgreSQL, pgvector, MongoDB, MySQL, React.js, React Native, HTML, CSS</p>
+    <p><b>Security, Infra &amp; Tools</b>AES-256, JWT, HMAC webhooks, Docker, Git, GitHub, Postman, Linux, Render, Vercel, Supabase</p>
+  </div>
+
+  <h2>Education &amp; certifications</h2>
+  <div class="skills-rows">
+    <p><b>Education</b>B.Tech, Computer Engineering, Bharati Vidyapeeth College of Engineering <small>· Aug 2023 - Present · CGPA: 8.39/10</small></p>
+    <p><b>Certifications</b>Agentic AI Fundamentals <small>(Oracle)</small> · DSA <small>(Apna College)</small> · Full Stack Web Development <small>(Chai aur Code / Udemy)</small></p>
+  </div>
+</body>
+</html>
