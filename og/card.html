@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Devansh Lamba: link preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: #f1e6cf;
+    color: #2e2a24;
+    font-family: "Geist", system-ui, sans-serif;
+    position: relative;
+  }
+  body::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background:
+      repeating-linear-gradient(0deg, rgba(46,42,36,.04) 0 1px, transparent 1px 3px),
+      radial-gradient(ellipse at center, transparent 55%, rgba(120,84,40,.18) 100%);
+  }
+  .glow { position: absolute; border-radius: 50%; filter: blur(70px); }
+  .glow.a { width: 420px; height: 420px; background: #f0bd82; right: -80px; top: -120px; opacity: .8; }
+  .glow.b { width: 360px; height: 360px; background: #9ccbb8; left: -120px; bottom: -160px; opacity: .7; }
+  .file {
+    position: absolute; left: 70px; top: 92px; right: 70px; bottom: 64px;
+    background: #f8f0de; border: 3px solid #2e2a24; border-radius: 10px;
+    box-shadow: 14px 14px 0 #e4d3b2, 14px 14px 0 3px #2e2a24;
+    padding: 46px 54px;
+  }
+  .tab {
+    position: absolute; top: -40px; left: 28px; height: 40px; padding: 0 18px;
+    display: flex; align-items: center;
+    font: 600 17px "IBM Plex Mono", monospace; letter-spacing: 2px; text-transform: uppercase;
+    background: #f0bd82; border: 3px solid #2e2a24; border-bottom: none; border-radius: 10px 10px 0 0;
+  }
+  .label { font: 600 18px "IBM Plex Mono", monospace; letter-spacing: 3px; text-transform: uppercase; color: #6e6253; }
+  h1 { margin: 10px 0 6px; font-size: 84px; line-height: 1; font-weight: 700; letter-spacing: -1px; }
+  .headline { font: 500 30px "IBM Plex Mono", monospace; color: #d4772a; margin: 0 0 34px; }
+  .stats { display: flex; gap: 18px; }
+  .stat { border: 2px solid #2e2a24; border-radius: 6px; padding: 12px 18px; background: #f1e6cf; min-width: 170px; }
+  .stat b { display: block; font-size: 40px; line-height: 1.05; }
+  .stat span { font: 500 15px "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: 1px; color: #6e6253; }
+  .projects { position: absolute; left: 54px; bottom: 34px; font: 500 19px "IBM Plex Mono", monospace; color: #6e6253; }
+  .projects b { color: #2e2a24; }
+  .stamp {
+    position: absolute; right: 48px; top: 40px; transform: rotate(-8deg);
+    font: 700 26px "IBM Plex Mono", monospace; letter-spacing: 4px; text-transform: uppercase;
+    color: #b24a35; border: 4px solid #b24a35; border-radius: 6px; padding: 8px 16px; opacity: .9;
+  }
+  .site { position: absolute; right: 54px; bottom: 34px; font: 600 19px "IBM Plex Mono", monospace; }
+</style>
+</head>
+<body>
+  <div class="glow a"></div>
+  <div class="glow b"></div>
+  <div class="file">
+    <div class="tab">Case file · DL-0001</div>
+    <div class="stamp">Verified</div>
+    <div class="label">Backend engineer · Pune</div>
+    <h1>Devansh Lamba</h1>
+    <p class="headline">Backend Systems &amp; Automation</p>
+    <div class="stats">
+      <div class="stat"><b>7,400+</b><span>LOC</span></div>
+      <div class="stat"><b>38</b><span>endpoints</span></div>
+      <div class="stat"><b>68</b><span>passing tests</span></div>
+    </div>
+    <div class="projects">Projects: <b>Siliqo</b> · <b>Vayris</b> · <b>Ordo</b> · <b>CloudTasks</b></div>
+    <div class="site">devanshlamba.in</div>
+  </div>
+</body>
+</html>

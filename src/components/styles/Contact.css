@@ -37,7 +37,7 @@
 
 a.contact-social {
   font-size: 25px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--line);
 }
 
 .contact-box h2 {
@@ -113,4 +113,14 @@ a.contact-social {
   .contact-container {
     width: calc(100% - 25px);
   }
+}
+
+.contact-section h3,
+.contact-flex h4 {
+  font-family: var(--font-mono);
+}
+.contact-flex h4 {
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }

@@ -1,5 +1,10 @@
 import { MdArrowOutward, MdCopyright } from "react-icons/md";
 import "./styles/Contact.css";
+import { profile } from "../data/profile";
+import ResponseForm from "./ResponseForm";
+import { openResponseForm, RESPONSE_FORM_ID } from "./ResponseForm/openResponseForm";
+
+const { email, connect, focus, socials } = profile.contact;
 
 const Contact = () => {
   return (
@@ -7,91 +12,71 @@ const Contact = () => {
       <div className="contact-container">
         <h3>Contact</h3>
 
+        <ResponseForm />
+
         <div className="contact-flex">
           {/* Connect */}
           <div className="contact-box">
-            <h4>Phone</h4>
-              <p>
-                <a href="tel:+917692968555" data-cursor="disable">
-                  +91 7692968555
-               </a>
-              </p>
+            <h4>Get in touch</h4>
+            <p>
+              <a
+                href={`#${RESPONSE_FORM_ID}`}
+                className="contact-cta"
+                data-cursor="disable"
+                onClick={(e) => {
+                  e.preventDefault();
+                  openResponseForm();
+                }}
+              >
+                Leave a response <MdArrowOutward />
+              </a>
+            </p>
+            <h4>Email</h4>
+            <p>
+              <a href={email.href} data-cursor="disable">
+                {email.display}
+              </a>
+            </p>
             <h4>Connect</h4>
             <p>
               <a
-                href="https://www.linkedin.com/in/devanshlamba/"
+                href={connect.href}
                 target="_blank"
                 rel="noreferrer"
                 data-cursor="disable"
               >
-                LinkedIn — devanshlamba
+                {connect.label}
               </a>
             </p>
 
             <h4>Focus</h4>
-            <p>Backend Systems, Automation & System Design</p>
-            <p>Building real-world workflows and scalable systems</p>
+            {focus.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
           </div>
 
           {/* Social */}
           <div className="contact-box">
             <h4>Social</h4>
 
-            <a
-              href="https://github.com/devanshlamba"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              GitHub <MdArrowOutward />
-            </a>
-
-            <a
-              href="https://www.linkedin.com/in/devanshlamba/"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              LinkedIn <MdArrowOutward />
-            </a>
-
-            <a
-              href="https://x.com/devanshlamba"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              Twitter <MdArrowOutward />
-            </a>
-
-            <a
-              href="https://www.youtube.com/@devanshlamba"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              YouTube <MdArrowOutward />
-            </a>
-
-            <a
-              href="https://www.instagram.com/dvnshlamba/"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              Instagram <MdArrowOutward />
-            </a>
+            {socials.map((social) => (
+              <a
+                key={social.id}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                data-cursor="disable"
+                className="contact-social"
+              >
+                {social.label} <MdArrowOutward />
+              </a>
+            ))}
           </div>
 
           {/* Footer */}
           <div className="contact-box">
             <h2>
-              Designed and Built by <br /> <span>Devansh Lamba</span>
+              Designed and Built by <br /> <span>{profile.name}</span>
             </h2>
             <h5>
               <MdCopyright /> 2026

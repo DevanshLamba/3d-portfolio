@@ -9,6 +9,16 @@ import "./styles/SocialIcons.css";
 import { TbNotes } from "react-icons/tb";
 import { useEffect } from "react";
 import HoverLinks from "./HoverLinks";
+import { isPlaceholder, profile, type SocialLink } from "../data/profile";
+import type { IconType } from "react-icons";
+
+const socialIcons: Record<SocialLink["id"], IconType> = {
+  github: FaGithub,
+  linkedin: FaLinkedinIn,
+  x: FaXTwitter,
+  youtube: FaYoutube,
+  instagram: FaInstagram,
+};
 
 const SocialIcons = () => {
   useEffect(() => {
@@ -60,63 +70,30 @@ const SocialIcons = () => {
   return (
     <div className="icons-section">
       <div className="social-icons" data-cursor="icons" id="social">
-        <span>
-          <a
-            href="https://github.com/devanshlamba"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <FaGithub />
-          </a>
-        </span>
-        <span>
-          <a
-            href="https://www.linkedin.com/in/devanshlamba/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <FaLinkedinIn />
-          </a>
-        </span>
-        <span>
-          <a
-            href="https://x.com/devanshlamba"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <FaXTwitter />
-          </a>
-        </span>
-        <span>
-          <a
-            href="https://www.youtube.com/@devanshlamba"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <FaYoutube />
-          </a>
-        </span>
-        <span>
-          <a
-            href="https://www.instagram.com/dvnshlamba/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <FaInstagram />
-          </a>
-        </span>
+        {profile.contact.socials.map((social) => {
+          const Icon = socialIcons[social.id];
+          return (
+            <span key={social.id}>
+              <a href={social.href} target="_blank" rel="noreferrer">
+                <Icon />
+              </a>
+            </span>
+          );
+        })}
       </div>
-      <a
-        className="resume-button"
-        href="/Devansh_Lamba_Resume.pdf"
-        target="_blank"
-        rel="noreferrer"
-      >
-        <HoverLinks text="RESUME" />
-        <span>
-          <TbNotes />
-        </span>
-      </a>
+      {!isPlaceholder(profile.resume) && (
+        <a
+          className="resume-button"
+          href={profile.resume}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <HoverLinks text="RESUME" />
+          <span>
+            <TbNotes />
+          </span>
+        </a>
+      )}
     </div>
   );
 };

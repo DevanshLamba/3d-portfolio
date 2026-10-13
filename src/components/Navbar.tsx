@@ -13,7 +13,7 @@ const Navbar = () => {
     smoother = ScrollSmoother.create({
       wrapper: "#smooth-wrapper",
       content: "#smooth-content",
-      smooth: 1.7,
+      smooth: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1.7,
       speed: 1.7,
       effects: true,
       autoResize: true,
@@ -68,6 +68,11 @@ const Navbar = () => {
           <li>
             <a data-href="#contact" href="#contact">
               <HoverLinks text="CONTACT" />
+            </a>
+          </li>
+          <li>
+            <a data-href="#respond" href="#respond">
+              <HoverLinks text="RESPOND" />
             </a>
           </li>
         </ul>

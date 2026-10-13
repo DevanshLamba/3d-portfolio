@@ -27,3 +27,6 @@ dist-ssr
 backup/
 .env
 ._*
+# Local secrets for the contact form (see .env.example)
+.env.*
+!.env.example

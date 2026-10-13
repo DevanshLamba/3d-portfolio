@@ -2,77 +2,9 @@ import { useState, useCallback, useLayoutEffect, useRef } from "react";
 import "./styles/Work.css";
 import WorkImage from "./WorkImage";
 import { MdArrowBack, MdArrowForward, MdArrowOutward } from "react-icons/md";
+import { DEMO_PASSWORD_PLACEHOLDER, isPlaceholder, profile } from "../data/profile";
 
-// Read-only demo login for CloudTasks, shown on the card on purpose. The
-// account is read-only and the password is public; set it back to the
-// placeholder to hide the credentials line again.
-const DEMO_PASSWORD_PLACEHOLDER = "DEMO_PASSWORD_HERE";
-const CLOUDTASKS_DEMO_PASSWORD = "123456789012";
-
-interface Project {
-  title: string;
-  category: string;
-  tools: string;
-  image: string;
-  link: string;
-  alt?: string;
-  /** Optional long-form fields — only CloudTasks uses these so far. */
-  summary?: string;
-  learned?: string[];
-  limits?: string;
-  demo?: { username: string; password: string };
-  links?: { label: string; href: string }[];
-}
-
-const projects: Project[] = [
-  {
-    title: "Siliqo",
-    category: "Agentic Customer Support API Platform",
-    tools: "Python, PostgreSQL + pgvector, RAG, Multi-tenant SaaS",
-    image: "/images/siliqo-cover.webp",
-    alt: "Siliqo cover — “Agentic AI customer support, as an API”, with RAG on pgvector, tool-calling and human handoff, and figures for lines of backend, API endpoints and passing tests.",
-    link: "https://siliqo-beta.vercel.app/",
-  },
-  {
-    title: "Vayris",
-    category: "Open-Source AI Agent for Windows",
-    tools: "Electron, React, TypeScript, Agentic Routing, MCP",
-    image: "/images/vayris-cover.webp",
-    alt: "Vayris cover — “An agent that never leaves your machine”, an open-source local-first desktop agent, with Zero-LLM, Fast LLM and Deep agentic LLM routing paths.",
-    link: "https://vayris-website.vercel.app/",
-  },
-  {
-    title: "Ordo",
-    category: "Hyperlocal Quick-Commerce Platform",
-    tools: "Node.js, React Native, MongoDB, REST APIs",
-    image: "/images/ordo-cover.webp",
-    alt: "Ordo cover — “Groceries in five minutes”, hyperlocal quick-commerce for retailers, customers and riders, launching in Pune.",
-    link: "https://ordo-website-two.vercel.app/",
-  },
-  {
-    title: "CloudTasks",
-    category: "Learning Project — Task Tracker on an Azure Linux VM",
-    tools: "FastAPI, SQLite, Docker, Caddy, Azure, OpenTofu, Cloudflare DNS",
-    image: "/images/cloudtasks-tasks.webp",
-    link: "https://tasks.devanshlamba.in",
-    alt: "CloudTasks task board in dark mode, signed in as the read-only demo account, showing colour-coded task cards and a Tasks / VM status switcher.",
-    summary:
-      "A college PBL experiment: a task tracker with a pastel UI and a live VM status panel, running 24/7 on a small Arm Linux VM in Azure and covered by 41 automated tests.",
-    learned: [
-      "Provisioning a small Arm Linux VM on Azure with OpenTofu and CLI scripts — NSG rules, a static public IP, and keeping it inside student credit",
-      "Packaging the app with Docker and keeping it on an internal network behind Caddy",
-      "Automatic HTTPS from Let's Encrypt, with a custom domain pointed through Cloudflare DNS",
-      "Authentication basics — argon2id hashes, server-side sessions, CSRF tokens, rate limiting, and a read-only demo account",
-    ],
-    limits:
-      "A learning build, not production: one small VM, SQLite, no autoscaling and no high availability.",
-    demo: { username: "demo", password: CLOUDTASKS_DEMO_PASSWORD },
-    links: [
-      { label: "Live demo (login required)", href: "https://tasks.devanshlamba.in" },
-      { label: "GitHub", href: "https://github.com/devanshlamba/azure-vm-deploy" },
-    ],
-  },
-];
+const projects = profile.projects;
 
 const Work = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -181,7 +113,7 @@ const Work = () => {
                         )}
                         <div className="carousel-tools">
                           <span className="tools-label">Tools & Features</span>
-                          <p>{project.tools}</p>
+                          <p>{project.stack.join(", ")}</p>
                         </div>
                         {project.learned && (
                           <div className="carousel-learned">
@@ -211,6 +143,9 @@ const Work = () => {
                             ))}
                           </div>
                         )}
+                        {project.repo?.visibility === "private" && (
+                          <p className="carousel-private">Code is private · walkthrough on request</p>
+                        )}
                         {project.demo &&
                           project.demo.password !==
                             DEMO_PASSWORD_PLACEHOLDER && (
@@ -225,7 +160,7 @@ const Work = () => {
                       <WorkImage
                         image={project.image}
                         alt={project.alt ?? project.title}
-                        link={project.link}
+                        link={isPlaceholder(project.link) ? undefined : project.link}
                       />
                     </div>
                   </div>
