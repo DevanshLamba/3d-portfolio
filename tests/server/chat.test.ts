@@ -93,7 +93,7 @@ describe("chat endpoint", () => {
       resetChatLimits();
       const { deps } = gemini([...replies]);
       const res = await handleChat(ask("What is Siliqo?"), { GEMINI_API_KEY: KEY }, deps);
-      assert.equal(res.status, 502);
+      assert.equal(res.status, 424);
       assert.ok(!(await res.text()).includes(KEY));
     }
   });

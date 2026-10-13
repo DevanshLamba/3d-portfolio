@@ -21,6 +21,8 @@ export const CHAT_LIMITS = { question: 400, body: 2000, context: 4 } as const;
 export const DEFAULT_MODEL = "gemini-flash-latest";
 export const DEFAULT_FALLBACK_MODEL = "gemini-3.1-flash-lite";
 const TRANSIENT = new Set([429, 500, 502, 503, 504]);
+// Upstream failures answer 424, not 502: Cloudflare replaces 502s from the
+// origin with its own error page.
 
 export interface ChatEnv {
   GEMINI_API_KEY?: string;
@@ -139,13 +141,13 @@ export async function handleChat(request: Request, env: ChatEnv, deps: ChatDeps)
       const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
       const text = (data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join("").trim();
       const answer = redactSensitive(sanitizeCitations(text, context.length));
-      if (!answer || !/\[\d+\]/.test(answer)) return json(502, { ok: false, error: "The live answer had no sources." });
+      if (!answer || !/\[\d+\]/.test(answer)) return json(424, { ok: false, error: "The live answer had no sources." });
       return json(200, { ok: true, answer, model, contextIds: hitsUsed.map((h) => h.id) });
     } catch {
       deps.log(`chat: Gemini ${model} unreachable or timed out`);
     }
   }
-  return json(502, { ok: false, error: "The live model is unavailable." });
+  return json(424, { ok: false, error: "The live model is unavailable." });
 }
 
 const processEnv = () => (globalThis as { process?: { env: Record<string, string | undefined> } }).process?.env ?? {};

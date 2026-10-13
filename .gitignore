@@ -30,3 +30,4 @@ backup/
 # Local secrets for the contact form (see .env.example)
 .env.*
 !.env.example
+.vercel
