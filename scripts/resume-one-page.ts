@@ -64,6 +64,16 @@ const vayris = byId("vayris");
 const ordo = byId("ordo");
 const leadloop = byId("leadloop");
 const cloudtasks = byId("cloudtasks");
+// Keyword row under the summary; each item is backed by a bullet below.
+const FOCUS = [
+  "Agentic AI",
+  "RAG / pgvector",
+  "Multi-tenant SaaS",
+  "LLM provider abstraction",
+  "API security",
+  "Cost-aware LLM design",
+];
+
 // Shorter names for long skill and certification entries; the entries themselves are unchanged.
 const SHORT: Record<string, string> = {
   "Retrieval-Augmented Generation (RAG)": "RAG",
@@ -78,27 +88,27 @@ const SHORT: Record<string, string> = {
 // highlight from profile.ts (some merged, some shortened); nothing is added.
 const bullets = {
   siliqo: [
-    "Architected a multi-tenant backend (7,400+ LOC, 38 endpoints, 68 passing tests) for an embeddable, zero-build JavaScript support widget with RAG, agentic tool-calling and human escalation, streaming over REST and SSE.",
-    "Built a provider-agnostic LLM layer unifying OpenAI, Anthropic and Google behind one streaming interface.",
-    "Designed Stripe/Razorpay-style two-key API auth (domain-locked public + secret key) with AES-256-GCM encryption.",
-    "Built RAG on PostgreSQL + pgvector (HNSW) and tool-calling via HMAC-signed webhooks with SSRF protection.",
+    "Shipped solo a multi-tenant agentic support API (7,400+ LOC, 38 endpoints, 68 passing tests) with RAG, tool-calling and automatic human escalation, embedded via a zero-build JS widget streaming over SSE.",
+    "Removed LLM vendor lock-in: one streaming layer over OpenAI, Anthropic and Google, switching providers by config.",
+    "Secured tenants with Stripe-style two-key auth (domain-locked public + secret key) and AES-256-GCM encryption.",
+    "Hardened tool-calling with HMAC-signed webhooks, SSRF protection and a bounded loop; RAG on pgvector (HNSW).",
   ],
   vayris: [
-    "Designed tri-path routing (deterministic, fast-LLM, deep agentic) sharing one unified tool registry, with MCP support.",
-    "Integrated RAG to ground responses in local context, with guardrails against unsafe or irreversible actions.",
-    "Runs on a user-supplied API key or a fully local model; a monorepo with Electron desktop and React web clients.",
+    "Tri-path routing: deterministic OS commands skip the LLM; fast and deep agentic paths share one tool registry.",
+    "Grounded the agent in local context with RAG, and added guardrails that block unsafe or irreversible actions.",
+    "Released open source (Apache 2.0) with MCP support; runs on the user's own API key or a fully local model.",
   ],
   ordo: [
-    "Founded it to connect local retailers, customers and delivery partners; leads architecture and full-stack work.",
+    "Leads architecture and the full-stack build of a platform linking local retailers, customers and riders.",
     "Building secure REST APIs (auth, orders, inventory) and a React Native app with real-time order tracking.",
   ],
   leadloop: [
-    "Handles a restaurant's bookings, orders, payments, marketing and revenue from one dashboard, with monthly analysis.",
-    "Multi-tenant, tier-locked template; a monorepo with a Next.js dashboard and a Dockerised core service.",
+    "Designing a restaurant's digital department: bookings, orders, payments, marketing and revenue in one dashboard.",
+    "Cost-aware by design: plain code first, the cheapest suitable LLM only where needed; tier-based features.",
   ],
 };
 
-const cloudLine = "Task tracker on an Azure Linux VM with 41 automated tests.";
+const cloudLine = "OpenTofu on Azure, Docker + Caddy HTTPS, argon2id, CSRF, rate limiting, 41 tests.";
 
 const html = `<!doctype html>
 <html lang="en">
@@ -112,6 +122,8 @@ ${resumeCss(0)}
      certifications laid out as compact rows. */
   .summary { margin: 9px 0 2px; }
   .summary span { display: block; }
+  .focus { margin: 4px 0 0; font-size: 8.6pt; color: #4e453a; }
+  .focus b { font: 600 7.8pt "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: 0.5px; color: #c46a1f; margin-right: 6px; }
   .startups-note { margin: 0 0 5px; font: 500 7.8pt "IBM Plex Mono", monospace; color: #6e6253; }
   .oneline { break-inside: avoid; margin: 0 0 6px; padding-left: 9px; border-left: 2.5px solid #e8a066; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
   .oneline p { margin: 0; font-size: 9.2pt; }
@@ -139,9 +151,10 @@ ${resumeCss(0)}
   </section>
 
   <p class="summary">
-    <span>Backend engineer shipping multi-tenant APIs, RAG pipelines, agentic tool-calling and LLM integrations.</span>
+    <span>Backend engineer shipping production AI systems: multi-tenant SaaS, RAG, agentic tool-calling and API security.</span>
     <span>Seeking full-time or internship roles in AI / backend engineering.</span>
   </p>
+  <p class="focus"><b>Focus</b>${FOCUS.map(esc).join(" · ")}</p>
 
   <h2>Selected work</h2>
   ${block(siliqo, bullets.siliqo)}
