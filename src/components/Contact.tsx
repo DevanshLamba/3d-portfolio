@@ -1,5 +1,8 @@
 import { MdArrowOutward, MdCopyright } from "react-icons/md";
 import "./styles/Contact.css";
+import { profile } from "../data/profile";
+
+const { phone, connect, focus, socials } = profile.contact;
 
 const Contact = () => {
   return (
@@ -11,87 +14,51 @@ const Contact = () => {
           {/* Connect */}
           <div className="contact-box">
             <h4>Phone</h4>
-              <p>
-                <a href="tel:+917692968555" data-cursor="disable">
-                  +91 7692968555
-               </a>
-              </p>
+            <p>
+              <a href={phone.href} data-cursor="disable">
+                {phone.display}
+              </a>
+            </p>
             <h4>Connect</h4>
             <p>
               <a
-                href="https://www.linkedin.com/in/devanshlamba/"
+                href={connect.href}
                 target="_blank"
                 rel="noreferrer"
                 data-cursor="disable"
               >
-                LinkedIn — devanshlamba
+                {connect.label}
               </a>
             </p>
 
             <h4>Focus</h4>
-            <p>Backend Systems, Automation & System Design</p>
-            <p>Building real-world workflows and scalable systems</p>
+            {focus.map((line) => (
+              <p key={line}>{line}</p>
+            ))}
           </div>
 
           {/* Social */}
           <div className="contact-box">
             <h4>Social</h4>
 
-            <a
-              href="https://github.com/devanshlamba"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              GitHub <MdArrowOutward />
-            </a>
-
-            <a
-              href="https://www.linkedin.com/in/devanshlamba/"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              LinkedIn <MdArrowOutward />
-            </a>
-
-            <a
-              href="https://x.com/devanshlamba"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              Twitter <MdArrowOutward />
-            </a>
-
-            <a
-              href="https://www.youtube.com/@devanshlamba"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              YouTube <MdArrowOutward />
-            </a>
-
-            <a
-              href="https://www.instagram.com/dvnshlamba/"
-              target="_blank"
-              rel="noreferrer"
-              data-cursor="disable"
-              className="contact-social"
-            >
-              Instagram <MdArrowOutward />
-            </a>
+            {socials.map((social) => (
+              <a
+                key={social.id}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                data-cursor="disable"
+                className="contact-social"
+              >
+                {social.label} <MdArrowOutward />
+              </a>
+            ))}
           </div>
 
           {/* Footer */}
           <div className="contact-box">
             <h2>
-              Designed and Built by <br /> <span>Devansh Lamba</span>
+              Designed and Built by <br /> <span>{profile.name}</span>
             </h2>
             <h5>
               <MdCopyright /> 2026
