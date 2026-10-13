@@ -179,9 +179,9 @@ assistant.setProvider(createPresetProvider("groq", pastedKey));
 
 The UI lives in `src/components/Assistant/`: `Assistant.css` and `Lab/Lab.css` hold its styles, and the logic is in `useAssistant`, `useSceneTour` and `src/assistant/`, so the components can be replaced without touching it. Tour stops call `navigateToSection()`, which scrolls through ScrollSmoother so the camera timelines follow, and jumps instead of animating under `prefers-reduced-motion`.
 
-**Privacy.** `contact.phone` and project demo credentials are never indexed. Email addresses and phone-like digit runs are redacted from everything the assistant can show: indexed facts, answers, pitches, tour text and tool output. Blank or placeholder links are skipped. `tests/assistant/privacy.test.ts` fails if any of those values gets through. API keys are pasted at runtime, held in memory only, and never stored. Don't hardcode a key anywhere in this repo; anything in frontend code is public.
+**Privacy.** There is no phone number anywhere in the profile, and the displayed email (`contact.email`) and project demo credentials are never indexed. Email addresses and phone-like digit runs are redacted from everything the assistant can show: indexed facts, answers, pitches, tour text and tool output. Blank or placeholder links are skipped. `tests/assistant/privacy.test.ts` fails if a phone-like pattern or a telephone link shows up in any of those or in the site's rendered sources (components, profile, `index.html`, README, the preview card and public text files). API keys are pasted at runtime, held in memory only, and never stored. Don't hardcode a key anywhere in this repo; anything in frontend code is public.
 
-> **Before deploying: swap the résumé.** `public/Devansh_Lamba_Resume.pdf` includes a phone number. Every résumé link (the corner button, the assistant's contact answer, the recruiter pitch and the `get_contact` tool) comes from the single `resume` value in `src/data/profile.ts`. Add a phone-number-free PDF to `public/` and point `resume` at it, or set `resume` to `""` to hide all résumé links.
+> **Résumé: hidden until there's a phone-free copy.** `resume` in `src/data/profile.ts` is the single value every résumé link comes from (the corner button, the assistant's contact answer, the recruiter pitch, the palette and the `get_contact` tool), and it is empty, so all of them are hidden. The existing `public/Devansh_Lamba_Resume.pdf` contains a phone number and is still served at its URL as long as it sits in `public/`. To bring the résumé back, save a phone-free PDF as `public/resume.pdf` and set `resume: "/resume.pdf"`; a test checks that the file exists and isn't the old PDF.
 
 **Editing.** Add or change facts in `profile.ts` and the index, matcher, pitches and tour pick them up. Tour stops and per-audience pitch choices are under `profile.assistant`. The job matcher's skill vocabulary is in `src/assistant/skills/taxonomy.ts`.
 
@@ -204,6 +204,23 @@ notes: [
 
 **Tests.** `npm test` runs the retrieval, job matcher, privacy, skills and Lab tests on Node's built-in test runner (Node 22.6+, no extra dependencies). The Lab tests check the backprop against numerical gradients, that the network learns two spirals, k-means recovery, overfitting at high polynomial degree, attention rows, and the chunker.
 
+### "Leave a response" form
+
+Visitors leave their name, email, organisation, the role they're hiring for, a short message and their consent to be contacted back; no phone field. The form sits in the Contact section (`src/components/ResponseForm/`) and opens from the navbar's RESPOND link, the Contact section's call-to-action, the command palette, the last tour stop, every pitch, and the button under assistant answers about getting in touch.
+
+Responses go to `api/contact.ts`, a Vercel Function that validates them and emails them to you through [Resend](https://resend.com) with reply-to set to the visitor, so you answer straight from your inbox. Abuse protection: a honeypot field, a minimum fill time, length and size caps, HTML and control-character stripping, an optional origin allow-list, and per-client rate limiting (best-effort, per serverless instance; add a rate-limiting rule in Vercel's firewall or Cloudflare for a hard limit).
+
+Settings live only in environment variables, never in the repo or the browser bundle. Copy `.env.example` to `.env.local` for local runs and set the same names in Vercel (Project → Settings → Environment Variables):
+
+| Variable | What it is |
+|---|---|
+| `RESEND_API_KEY` | API key from Resend. |
+| `CONTACT_TO_EMAIL` | Where responses are delivered. |
+| `CONTACT_FROM_EMAIL` | The sender. Resend's `onboarding@resend.dev` only delivers to your own Resend account's email; for anything else verify `devanshlamba.in` in Resend (it adds DNS records you put in Cloudflare) and use an address on it. |
+| `ALLOWED_ORIGINS` | Optional, e.g. `https://devanshlamba.in,https://www.devanshlamba.in`. |
+
+Without `RESEND_API_KEY`, `npm run dev` and `npm run preview` run the form as a dry run (logged in the terminal, nothing sent), and production answers that the form isn't set up yet. `npm test` covers the endpoint with a fake email provider.
+
 ### Run and review locally
 
 From a clean checkout (Node 22.6 or newer):
@@ -225,7 +242,8 @@ Review checklist (run it on `npm run dev` to see the FPS readout, then once more
 - [ ] *What is Siliqo?* answers with sources; clicking one scrolls to the Work section.
 - [ ] *How does Siliqo handle API keys?* quotes the two-key authentication detail with a citation.
 - [ ] *What has he built with React Native?* names Ordo.
-- [ ] *What is his phone number?* says it isn't shared and shows no number.
+- [ ] *What is his phone number?*, *Can I call you?* and *Can I hire you?* point to the response form with a **Leave a response** button and never show a number.
+- [ ] *Is Vayris open source?* mentions Apache 2.0 and the GitHub repo; *Is ORDO live?* says it isn't live yet; *Can I see the Siliqo code?* says the code is private and a walkthrough is available on request.
 - [ ] *Does he know Kubernetes?* or *What's his favourite film?* gets an honest "couldn't find that" instead of a guess.
 - [ ] Answers carry a VERIFIED stamp; the "couldn't find" answers carry NO RECORD.
 - [ ] **How this was found** under an answer lists query terms, each retrieved fact's score and signals, and marks facts as used or dropped.
@@ -235,6 +253,8 @@ Review checklist (run it on `npm run dev` to see the FPS readout, then once more
 - [ ] **Tour**: the camera and page move to each section. → and ← step through the stops, Esc ends the tour, and Next on the last stop finishes it.
 - [ ] **Ctrl+K / ⌘K** opens the palette: typing filters commands, arrow keys and Enter run one, and typing a question then picking "Ask" answers it in the panel.
 - [ ] **Lab**: train the neural net on spirals until accuracy passes 95%; change chunk size and overlap in the RAG playground and watch the top match move; switch attention heads; step k-means to convergence; set regression to degree 11, press "Solve exactly", and see held-out error climb. Esc closes it. Keep an eye on the FPS readout while training.
+- [ ] **Leave a response**: the navbar's RESPOND link and the Contact section's button scroll to the form and put the cursor in Name. Submitting it empty shows an error summary and marks each field; Tab, Space and Enter work throughout. With the dev server running and no key set, a valid response shows the RECEIVED stamp and a dry-run line in the terminal. Turn off the network in dev tools and submit: a RETURNED notice appears and nothing you typed is lost.
+- [ ] With your Resend settings in `.env.local`, a response arrives in your inbox and replying goes to the visitor.
 - [ ] On a phone-width window, the panel sits below the header, and the Lab and palette cover the page with no sideways scrolling.
 - [ ] After `npm run og`, `public/og-image.png` shows your current name, headline and numbers.
 - [ ] With reduced motion turned on in the OS, scrolling and tour stops land without easing.
@@ -255,6 +275,8 @@ Review checklist (run it on `npm run dev` to see the FPS readout, then once more
   Run `npm run build` and address reported type errors before deploying.
 
 ## Deployment
+
+The site is deployed on Vercel. The `api/` folder is picked up as Vercel Functions alongside the Vite build, so the response form works once its environment variables are set in the Vercel project (see "Leave a response" form above).
 
 1. Create a production build:
 
