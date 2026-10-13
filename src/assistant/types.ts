@@ -58,13 +58,20 @@ export interface Citation {
   anchor?: string;
 }
 
+/** answered: cited facts · not-found: honest "couldn't find" · chat: greeting or help. */
+export type AnswerOutcome = "answered" | "not-found" | "chat";
+
 export interface AskResult {
   query: string;
   answer: string;
   citations: Citation[];
   retrieved: RetrievedChunk[];
+  /** Stemmed content terms from the question, and those the corpus has never seen. */
+  queryTerms: string[];
+  unknownTerms: string[];
   /** False when nothing relevant was found and the answer says so. */
   grounded: boolean;
+  outcome: AnswerOutcome;
   generator: "offline" | string;
   /** Set when a live provider failed and the offline answer was used instead. */
   fallbackReason?: string;

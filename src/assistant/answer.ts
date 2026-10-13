@@ -4,7 +4,7 @@
 
 import { isRelevant, type SearchResult } from "./retrieval.ts";
 import { splitSentences, tokenize } from "./text.ts";
-import type { Citation, RetrievedChunk } from "./types.ts";
+import type { AnswerOutcome, Citation, RetrievedChunk } from "./types.ts";
 
 export interface ComposeContext {
   firstName: string;
@@ -16,6 +16,7 @@ export interface ComposedAnswer {
   answer: string;
   citations: Citation[];
   grounded: boolean;
+  outcome: AnswerOutcome;
 }
 
 const MAX_PIECES = 3;
@@ -90,10 +91,10 @@ export function notFound(query: string, result: SearchResult, ctx: ComposeContex
 
 export function composeAnswer(query: string, result: SearchResult, ctx: ComposeContext): ComposedAnswer {
   const chat = smallTalk(query, ctx);
-  if (chat) return { answer: chat, citations: [], grounded: false };
+  if (chat) return { answer: chat, citations: [], grounded: false, outcome: "chat" };
 
   if (!isRelevant(result)) {
-    return { answer: notFound(query, result, ctx), citations: [], grounded: false };
+    return { answer: notFound(query, result, ctx), citations: [], grounded: false, outcome: "not-found" };
   }
 
   const top = result.hits[0].score;
@@ -128,5 +129,5 @@ export function composeAnswer(query: string, result: SearchResult, ctx: ComposeC
     pieces.push(`I didn't find anything on ${named.map((w) => `“${w}”`).join(" or ")} specifically.`);
   }
 
-  return { answer: pieces.join("\n\n"), citations, grounded: true };
+  return { answer: pieces.join("\n\n"), citations, grounded: true, outcome: "answered" };
 }

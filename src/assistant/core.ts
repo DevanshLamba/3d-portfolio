@@ -41,7 +41,10 @@ export function createAssistantCore(p: ProfileData = defaultProfile) {
         answer: composed.answer,
         citations: composed.citations,
         retrieved: result.hits,
+        queryTerms: result.queryTerms,
+        unknownTerms: result.unknownTerms,
         grounded: composed.grounded,
+        outcome: composed.outcome,
         generator: "offline",
         timings: { retrievalMs: t1 - t0, generationMs: now() - t1 },
       };

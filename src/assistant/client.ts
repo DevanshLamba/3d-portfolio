@@ -12,8 +12,9 @@ import { buildTourStops, createTour, type Tour, type TourEventDetail } from "./s
 import type { AgentRun, AgentStep, AskResult, Citation, JobMatchResult, MatchStatus, MatchEvidence, ToolSchema } from "./types.ts";
 import type { WorkerRequest, WorkerResponse } from "./worker.ts";
 
-/** Window event mirroring every tour event, for code outside React. */
-export const TOUR_WINDOW_EVENT = "portfolio:tour";
+import { TOUR_WINDOW_EVENT } from "./events.ts";
+
+export { ASSISTANT_STATE_EVENT, TOUR_WINDOW_EVENT, type AssistantActivity } from "./events.ts";
 
 interface Backend {
   readonly kind: "worker" | "inline";
@@ -145,14 +146,18 @@ export interface Assistant {
   /** Pass null to go back to offline answers. The key stays inside the provider closure. */
   setProvider(provider: LLMProvider | null): void;
   readonly provider: { label: string; model: string } | null;
-  readonly backendKind: "worker" | "inline";
+  /** "idle" until the first call starts the worker. */
+  readonly backendKind: "worker" | "inline" | "idle";
   dispose(): void;
 }
 
 const LLM_CONTEXT_SIZE = 4;
 
 export function createAssistant(options: AssistantOptions = {}): Assistant {
-  const backend = createBackend(options.backend ?? "auto");
+  // Created on first use, so getAssistant() is cheap and the worker only
+  // starts when someone actually asks something.
+  let backendInstance: Backend | null = null;
+  const backend = () => (backendInstance ??= createBackend(options.backend ?? "auto"));
   let provider: LLMProvider | null = null;
 
   const isAvailable = options.isTourStopAvailable ?? ((id: string) => typeof document === "undefined" || Boolean(document.getElementById(id)));
@@ -192,21 +197,21 @@ export function createAssistant(options: AssistantOptions = {}): Assistant {
 
   return {
     async ask(query, opts = {}) {
-      const offline = await backend.call<AskResult>("ask", [query, { topK: opts.topK }]);
+      const offline = await backend().call<AskResult>("ask", [query, { topK: opts.topK }]);
       return generate(offline, opts.signal);
     },
-    search: (query, topK) => backend.call("search", [query, topK]),
-    matchJob: (text) => backend.call("matchJob", [text]),
-    skillEvidence: (skill) => backend.call("skillEvidence", [skill]),
+    search: (query, topK) => backend().call("search", [query, topK]),
+    matchJob: (text) => backend().call("matchJob", [text]),
+    skillEvidence: (skill) => backend().call("skillEvidence", [skill]),
     looksLikeJobDescription,
     pitch: (audience) => buildPitch(profile, audience),
     audiences: AUDIENCES.map((id) => ({ id, label: profile.assistant.pitches[id].label })),
     tour,
     tools: {
-      schemas: () => backend.call("toolSchemas", []),
-      run: (name, args = {}) => backend.call("runTool", [name, args]),
+      schemas: () => backend().call("toolSchemas", []),
+      run: (name, args = {}) => backend().call("runTool", [name, args]),
     },
-    runAgent: (goal, onStep) => backend.call("runAgent", [goal], onStep as (e: unknown) => void),
+    runAgent: (goal, onStep) => backend().call("runAgent", [goal], onStep as (e: unknown) => void),
     setProvider(next) {
       provider = next;
     },
@@ -214,11 +219,12 @@ export function createAssistant(options: AssistantOptions = {}): Assistant {
       return provider ? { label: provider.label, model: provider.model } : null;
     },
     get backendKind() {
-      return backend.kind;
+      return backendInstance?.kind ?? "idle";
     },
     dispose() {
       tour.end();
-      backend.dispose();
+      backendInstance?.dispose();
+      backendInstance = null;
       provider = null;
     },
   };
